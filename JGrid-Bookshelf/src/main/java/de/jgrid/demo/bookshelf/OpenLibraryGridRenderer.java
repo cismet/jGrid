@@ -9,7 +9,6 @@ import javax.swing.JComponent;
 
 import de.loganmobile.grid.GridCellRenderer;
 import de.loganmobile.grid.JGrid;
-import de.loganmobile.grid.iphoto.ImageUtilities;
 
 public class OpenLibraryGridRenderer extends JComponent implements
 		GridCellRenderer {
