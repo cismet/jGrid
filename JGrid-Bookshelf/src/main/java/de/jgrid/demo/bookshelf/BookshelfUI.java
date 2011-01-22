@@ -20,7 +20,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -36,8 +35,8 @@ public class BookshelfUI extends GridUI {
 	@Override
 	public void installUI(JComponent c) {
 		super.installUI(c);
-		try {
-			backgroundImage = ImageIO.read(new File("src/main/java/de/jgrid/demo/bookshelf/bookshelf.png"));
+		try {			
+			backgroundImage = ImageIO.read(UrlLoader.getInstance().load("/de/jgrid/demo/bookshelf/bookshelf.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

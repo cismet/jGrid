@@ -55,44 +55,6 @@ public class BookshelfDemo extends JFrame {
 		bookList.add(new Book("-", "1423101499"));
 		bookList.add(new Book("-", "0061477931"));
 		
-		bookList.add(new Book("Unseen Academicals", "0552153370"));
-		bookList.add(new Book("Thief of time", "0552148407"));
-		bookList.add(new Book("The truth", "0552147680"));
-		bookList.add(new Book("The fifth elephant", "0552146161"));
-		bookList.add(new Book("Carpe Jugulum", "0552146153"));
-		bookList.add(new Book("Jingo", "055214598X"));
-		bookList.add(new Book("Feet of Clay", "0552142379"));
-		bookList.add(new Book("-", "0552142360"));
-		bookList.add(new Book("-", "0552138916"));
-		bookList.add(new Book("-", "0552146145"));
-		bookList.add(new Book("-", "0552140295"));
-		bookList.add(new Book("-", "0552134651"));
-		bookList.add(new Book("-", "0552134643"));
-		bookList.add(new Book("-", "0552134635"));
-		bookList.add(new Book("-", "1857989546"));
-		bookList.add(new Book("-", "0552134627"));
-		bookList.add(new Book("-", "1423101499"));
-		bookList.add(new Book("-", "0061477931"));
-		
-		bookList.add(new Book("Unseen Academicals", "0552153370"));
-		bookList.add(new Book("Thief of time", "0552148407"));
-		bookList.add(new Book("The truth", "0552147680"));
-		bookList.add(new Book("The fifth elephant", "0552146161"));
-		bookList.add(new Book("Carpe Jugulum", "0552146153"));
-		bookList.add(new Book("Jingo", "055214598X"));
-		bookList.add(new Book("Feet of Clay", "0552142379"));
-		bookList.add(new Book("-", "0552142360"));
-		bookList.add(new Book("-", "0552138916"));
-		bookList.add(new Book("-", "0552146145"));
-		bookList.add(new Book("-", "0552140295"));
-		bookList.add(new Book("-", "0552134651"));
-		bookList.add(new Book("-", "0552134643"));
-		bookList.add(new Book("-", "0552134635"));
-		bookList.add(new Book("-", "1857989546"));
-		bookList.add(new Book("-", "0552134627"));
-		bookList.add(new Book("-", "1423101499"));
-		bookList.add(new Book("-", "0061477931"));
-		
 		JGrid grid = new JGrid(new ListModel() {
 
 			@Override
