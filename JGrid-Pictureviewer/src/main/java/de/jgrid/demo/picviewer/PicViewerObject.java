@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-public class BufferedImageIPhotoObject implements IPhotoModelObject {
+public class PicViewerObject {
 
 	private List<BufferedImage> images;
 	
@@ -33,7 +33,7 @@ public class BufferedImageIPhotoObject implements IPhotoModelObject {
 	
 	private boolean marker;
 	
-	public BufferedImageIPhotoObject(File folder) {
+	public PicViewerObject(File folder) {
 		this.path = folder.getName();
 		images = new ArrayList<BufferedImage>();
 		
@@ -64,7 +64,6 @@ public class BufferedImageIPhotoObject implements IPhotoModelObject {
 		return index;
 	}
 	
-	@Override
 	public Object getValueForFraction() {
 		return getImage();
 	}
@@ -77,7 +76,6 @@ public class BufferedImageIPhotoObject implements IPhotoModelObject {
 		return fraction;
 	}
 	
-	@Override
 	public void setFraction(float fraction) {
 		this.fraction = fraction;
 		this.index = (int) (fraction * (float)(images.size()));

@@ -32,29 +32,29 @@ import javax.swing.event.ChangeListener;
 import de.jgrid.JGrid;
 import de.jgrid.demo.util.UrlLoader;
 
-public class iPhotoDemo extends JFrame {
+public class PicViewerDemo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	public iPhotoDemo() {
+	public PicViewerDemo() {
 		setTitle("iPhoto");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		DefaultListModel model = new DefaultListModel();
 		for (int i = 0; i < 10; i++) {
 			try {
-				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/coast/").toURI())));
-				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dogs/").toURI())));
-				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/emotions/").toURI())));
-				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/flowers/").toURI())));
-				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/landscape/").toURI())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/coast/").toURI())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dogs/").toURI())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/emotions/").toURI())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/flowers/").toURI())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/landscape/").toURI())));
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
 		}
 		
 		final JGrid grid = new JGrid(model);
-		grid.setDefaultCellRenderer(new IPhotoRenderer());
+		grid.setDefaultCellRenderer(new PicViewerRenderer());
 		grid.setFixedCellDimension(256);
 		grid.addMouseMotionListener(new MouseAdapter() {
 			
@@ -64,10 +64,10 @@ public class iPhotoDemo extends JFrame {
 			public void mouseMoved(MouseEvent e) {
 				if(lastIndex >= 0) {
 					Object o = grid.getModel().getElementAt(lastIndex);
-					if(o instanceof IPhotoModelObject) {
+					if(o instanceof PicViewerObject) {
 						Rectangle r = grid.getCellBounds(lastIndex);
 						if(r != null && !r.contains(e.getPoint())) {
-							((BufferedImageIPhotoObject) o).setMarker(false);
+							((PicViewerObject) o).setMarker(false);
 							grid.repaint(r);
 						}
 					}
@@ -76,11 +76,11 @@ public class iPhotoDemo extends JFrame {
 				int index = grid.getCellAt(e.getPoint());
 				if(index >= 0) {
 					Object o = grid.getModel().getElementAt(index);
-					if(o instanceof IPhotoModelObject) {
+					if(o instanceof PicViewerObject) {
 						Rectangle r = grid.getCellBounds(index);
 						if(r != null) {
-							((IPhotoModelObject) o).setFraction(((float)e.getPoint().x - (float)r.x) / (float)r.width);
-							((BufferedImageIPhotoObject) o).setMarker(true);
+							((PicViewerObject) o).setFraction(((float)e.getPoint().x - (float)r.x) / (float)r.width);
+							((PicViewerObject) o).setMarker(true);
 							lastIndex = index;
 							grid.repaint(r);
 						}
@@ -115,7 +115,7 @@ public class iPhotoDemo extends JFrame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				new iPhotoDemo().setVisible(true);
+				new PicViewerDemo().setVisible(true);
 			}
 		});
 	}
