@@ -15,13 +15,20 @@
 package de.jgrid.demo.picviewer;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
@@ -43,11 +50,11 @@ public class PicViewerDemo extends JFrame {
 		DefaultListModel model = new DefaultListModel();
 		for (int i = 0; i < 10; i++) {
 			try {
-				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/coast/").toURI())));
-				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dogs/").toURI())));
-				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/emotions/").toURI())));
-				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/flowers/").toURI())));
-				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/landscape/").toURI())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/coast/").getFile())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dogs/").getFile())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/emotions/").getFile())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/flowers/").getFile())));
+				model.addElement(new PicViewerObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/landscape/").getFile())));
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
@@ -90,7 +97,15 @@ public class PicViewerDemo extends JFrame {
 			}
 		});
 		
+		getContentPane().add(new JScrollPane(grid), BorderLayout.CENTER);
+		
+		JPanel controlPanel = new JPanel();
+		controlPanel.setLayout(new BorderLayout());
+		JButton creditsButton = new JButton("image credits");
+		controlPanel.add(creditsButton, BorderLayout.WEST);
+		
 		final JSlider slider = new JSlider(128, 1024, grid.getFixedCellDimension());
+		slider.putClientProperty( "JComponent.sizeVariant", "small" );
 		slider.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -98,9 +113,23 @@ public class PicViewerDemo extends JFrame {
 				grid.setFixedCellDimension(slider.getValue());
 			}
 		});
+		JPanel sliderPanel = new JPanel();
+		sliderPanel.setLayout(new FlowLayout());
+		try {
+			sliderPanel.add(new JLabel(new ImageIcon(ImageIO.read(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dim_small.png")))));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		sliderPanel.add(slider);
+		try {
+			sliderPanel.add(new JLabel(new ImageIcon(ImageIO.read(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dim_large.png")))));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
-		getContentPane().add(new JScrollPane(grid), BorderLayout.CENTER);
-		getContentPane().add(slider, BorderLayout.SOUTH);
+		controlPanel.add(sliderPanel, BorderLayout.EAST);
+		
+		getContentPane().add(controlPanel, BorderLayout.SOUTH);
 		pack();
 	}
 	

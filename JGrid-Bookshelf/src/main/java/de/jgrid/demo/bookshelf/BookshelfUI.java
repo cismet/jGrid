@@ -42,7 +42,7 @@ public class BookshelfUI extends GridUI {
 			e.printStackTrace();
 		}
 		grid.setFixedCellDimension(120);
-		grid.setHorizonztalMargin(18);
+		grid.setHorizonztalMargin(8);
 		grid.setVerticalMargin(12);
 		grid.setBorder(BorderFactory.createEmptyBorder(6, 0, 0, 0));
 		grid.setSelectionBackground(null);
