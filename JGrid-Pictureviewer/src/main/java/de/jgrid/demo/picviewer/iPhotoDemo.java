@@ -29,7 +29,8 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import de.loganmobile.grid.JGrid;
+import de.jgrid.JGrid;
+import de.jgrid.demo.util.UrlLoader;
 
 public class iPhotoDemo extends JFrame {
 
@@ -41,11 +42,15 @@ public class iPhotoDemo extends JFrame {
 		
 		DefaultListModel model = new DefaultListModel();
 		for (int i = 0; i < 10; i++) {
-			model.addElement(new BufferedImageIPhotoObject(new File("src/main/java/de/jgrid/demo/picviewer/coast/")));
-			model.addElement(new BufferedImageIPhotoObject(new File("src/main/java/de/jgrid/demo/picviewer/dogs")));
-			model.addElement(new BufferedImageIPhotoObject(new File("src/main/java/de/jgrid/demo/picviewer/emotions")));
-			model.addElement(new BufferedImageIPhotoObject(new File("src/main/java/de/jgrid/demo/picviewer/flowers")));
-			model.addElement(new BufferedImageIPhotoObject(new File("src/main/java/de/jgrid/demo/picviewer/landscape")));
+			try {
+				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/coast/").toURI())));
+				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/dogs/").toURI())));
+				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/emotions/").toURI())));
+				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/flowers/").toURI())));
+				model.addElement(new BufferedImageIPhotoObject(new File(UrlLoader.getInstance().load("/de/jgrid/demo/picviewer/landscape/").toURI())));
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
 		}
 		
 		final JGrid grid = new JGrid(model);
@@ -108,7 +113,6 @@ public class iPhotoDemo extends JFrame {
 					UIManager.setLookAndFeel(UIManager
 							.getSystemLookAndFeelClassName());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				new iPhotoDemo().setVisible(true);

@@ -26,7 +26,8 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
-import de.loganmobile.grid.GridUI;
+import de.jgrid.GridUI;
+import de.jgrid.demo.util.UrlLoader;
 
 public class BookshelfUI extends GridUI {
 

@@ -12,12 +12,22 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.loganmobile.grid;
+package de.jgrid;
 
-import java.awt.Component;
+import java.awt.Color;
 
-public interface GridLabelRenderer {
+import javax.swing.JComponent;
 
-	public Component getGridLabelRendererComponent(JGrid grid, Object value,
-			int index, boolean isSelected, boolean cellHasFocus);
+public class MacOsGridUI extends GridUI {
+
+	@Override
+	public void installUI(JComponent c) {
+		super.installUI(c);
+		grid.setBackground(new Color(103,103,103));
+		grid.setOpaque(true);
+		grid.setSelectionBorderColor(new Color(248,211,80));
+		grid.setSelectionForeground(new Color(0,0,0));
+		grid.setSelectionBackground(new Color(43,43,43));
+		grid.setCellBackground(new Color(43,43,43));
+	}
 }

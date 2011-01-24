@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.loganmobile.grid;
+package de.jgrid;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,6 +34,8 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
+
+import de.jgrid.JGrid;
 
 public class GridPropertiesDemo extends JFrame {
 

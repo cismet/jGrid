@@ -22,7 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
-import de.loganmobile.grid.JGrid;
+import de.jgrid.JGrid;
 
 public class BookshelfDemo extends JFrame {
 

@@ -21,8 +21,9 @@ import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 
-import de.loganmobile.grid.GridCellRenderer;
-import de.loganmobile.grid.JGrid;
+import de.jgrid.GridCellRenderer;
+import de.jgrid.JGrid;
+import de.jgrid.demo.util.ImageUtilities;
 
 public class OpenLibraryGridRenderer extends JComponent implements
 		GridCellRenderer {

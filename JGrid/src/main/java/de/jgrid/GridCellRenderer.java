@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.loganmobile.grid;
+package de.jgrid;
 
 import java.awt.Component;
 

@@ -25,8 +25,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
-import de.loganmobile.grid.GridCellRenderer;
-import de.loganmobile.grid.JGrid;
+import de.jgrid.GridCellRenderer;
+import de.jgrid.JGrid;
 
 public class IPhotoRenderer extends JComponent implements GridCellRenderer {
 
