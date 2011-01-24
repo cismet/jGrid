@@ -67,97 +67,49 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 	
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
-	 * 
-	 * @since 1.5
-	 * @return <code>true</code> if the background is completely opaque and
-	 *         differs from the JList's background; <code>false</code> otherwise
-	 */
-	@Override
-	public boolean isOpaque() {
-		Color back = getBackground();
-		Component p = getParent();
-		if (p != null) {
-			p = p.getParent();
-		}
-		// p should now be the JList.
-		boolean colorMatch = (back != null) && (p != null)
-				&& back.equals(p.getBackground()) && p.isOpaque();
-		return !colorMatch && super.isOpaque();
-	}
-
-	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void validate() {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
-	 * 
-	 * @since 1.5
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void invalidate() {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
-	 * 
-	 * @since 1.5
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void repaint() {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void revalidate() {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void repaint(long tm, int x, int y, int width, int height) {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void repaint(Rectangle r) {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
-	 */
-	@Override
-	protected void firePropertyChange(String propertyName, Object oldValue,
-			Object newValue) {
-		// Strings get interned...
-		if (propertyName == "text"
-				|| ((propertyName == "font" || propertyName == "foreground")
-						&& oldValue != newValue && getClientProperty(javax.swing.plaf.basic.BasicHTML.propertyKey) != null)) {
-
-			super.firePropertyChange(propertyName, oldValue, newValue);
-		}
-	}
-
-	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, byte oldValue,
@@ -165,8 +117,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, char oldValue,
@@ -174,8 +125,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, short oldValue,
@@ -183,8 +133,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, int oldValue,
@@ -192,8 +141,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, long oldValue,
@@ -201,8 +149,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, float oldValue,
@@ -210,8 +157,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, double oldValue,
@@ -219,8 +165,7 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	}
 
 	/**
-	 * Overridden for performance reasons. See the <a
-	 * href="#override">Implementation Note</a> for more information.
+	 * Overridden for performance reasons.
 	 */
 	@Override
 	public void firePropertyChange(String propertyName, boolean oldValue,

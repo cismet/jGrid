@@ -20,7 +20,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.io.Serializable;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
@@ -31,9 +30,13 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
+/**
+ * A Component that displays a list of Elements in a grid. The Elements stored is  a separate model, {@code ListModel}. So you can use a {@code JList} parallel to to the JGrid
+ * 
+ * @author hendrikebbers
+ *
+ */
 public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	// TODO: Drag&Drop, Sortierung
@@ -43,7 +46,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	private ListModel dataModel;
 	private GridCellRenderer defaultCellRenderer;
 	private GridLabelRenderer defaultLabelRenderer;
-	private ListSelectionListener selectionListener;
 	private int fixedCellDimension = 128;
 	private int cellLabelCap = 16;
 	private int horizonztalMargin = 16;
@@ -54,52 +56,59 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	private Color cellBackground;
 	private int horizontalAlignment = CENTER;
 	private boolean labelsVisible = true;
+	
 	private static final String uiClassID = "GridUI";
 
-	public JGrid(ListModel dataModel) {
-		if (dataModel == null) {
+	/**
+     * Constructs a {@code JGrid} that displays elements from the specified,
+     * {@code non-null}, model. All {@code JGrid} constructors must delegate to
+     * this one.
+     *
+     * @param model the model for the ghrid
+     * @exception IllegalArgumentException if the model is {@code null}
+     */
+	public JGrid(ListModel model) {
+		if (model == null) {
 			throw new IllegalArgumentException("dataModel must be non null");
 		}
 
+		//register Tooltips
 		ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 		toolTipManager.registerComponent(this);
 
-		this.dataModel = dataModel;
-		selectionModel = createSelectionModel();
+		this.dataModel = model;
+		selectionModel = createDefaultSelectionModel();
+		
 		setAutoscrolls(true);
 		setOpaque(true);
 		updateUI();
 		setDefaultCellRenderer(new DefaultGridRenderer());
 	}
 
-	protected ListSelectionModel createSelectionModel() {
+	 /**
+     * Returns an default instance of {@code ListSelectionModel}; called
+     * during construction to initialize the grids selectionModel. Normally this returns a {@code DefaultListSelectionModel}
+     *
+     * @return a default ListSelectionModel
+     */
+	protected ListSelectionModel createDefaultSelectionModel() {
 		return new DefaultListSelectionModel();
 	}
 
-	public void addListSelectionListener(ListSelectionListener listener) {
-		if (selectionListener == null) {
-			selectionListener = new ListSelectionHandler();
-			getSelectionModel().addListSelectionListener(selectionListener);
-		}
-
-		listenerList.add(ListSelectionListener.class, listener);
-	}
-
-	private class ListSelectionHandler implements ListSelectionListener,
-			Serializable {
-
-		private static final long serialVersionUID = 1L;
-
-		public void valueChanged(ListSelectionEvent e) {
-			fireSelectionValueChanged(e.getFirstIndex(), e.getLastIndex(), e
-					.getValueIsAdjusting());
-		}
-	}
-
+	/**
+     * Returns the default GridLabelRenderer
+     *
+     * @return GridLabelRenderer of this grid
+     */
 	public GridLabelRenderer getDefaultLabelRenderer() {
 		return defaultLabelRenderer;
 	}
 
+	/**
+	 * Sets the GridLabelRenderer for this Component.
+	 * Fires {@PropertyChangeEvent} with the {@defaultLabelRenderer} property
+	 * @param defaultLabelRenderer the new LabelRenderer for this Grid
+	 */
 	public void setDefaultLabelRenderer(GridLabelRenderer defaultLabelRenderer) {
 		GridLabelRenderer oldValue = this.defaultLabelRenderer;
 		this.defaultLabelRenderer = defaultLabelRenderer;
@@ -114,14 +123,19 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	public boolean isLabelsVisible() {
 		return labelsVisible;
 	}
-
+	
+	/**
+	 * Sets the labelsVisible-Property for this Component. If true the grid renders Labels for all Elements. (Actually not working)
+	 * Fires {@PropertyChangeEvent} with the {@labelsVisible} property
+	 * @param labelsVisible the labelsVisible-flag for this Grid
+	 */
 	public void setLabelsVisible(boolean labelsVisible) {
 		boolean oldValue = this.labelsVisible;
 		this.labelsVisible = labelsVisible;
 		firePropertyChange("labelsVisible", oldValue, this.labelsVisible);
 	}
 
-	public ListModel getDataModel() {
+	public ListModel getModel() {
 		return dataModel;
 	}
 
@@ -133,28 +147,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		return defaultCellRenderer;
 	}
 
-	protected void fireSelectionValueChanged(int firstIndex, int lastIndex,
-			boolean isAdjusting) {
-		Object[] listeners = listenerList.getListenerList();
-		ListSelectionEvent e = null;
-
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == ListSelectionListener.class) {
-				if (e == null) {
-					e = new ListSelectionEvent(this, firstIndex, lastIndex,
-							isAdjusting);
-				}
-				((ListSelectionListener) listeners[i + 1]).valueChanged(e);
-			}
-		}
-	}
-
 	public int getSelectionMode() {
 		return getSelectionModel().getSelectionMode();
-	}
-
-	public ListModel getModel() {
-		return dataModel;
 	}
 
 	public void addSelectionInterval(int anchor, int lead) {
@@ -197,6 +191,11 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		}
 	}
 
+	/**
+	 * Sets the rendering dimension for all elements in the grid. The width and height of each element is equals the dimenison.
+	 * Fires {@PropertyChangeEvent} with the {@fixedCellDimension} property
+	 * @param dimension the new dimension for this Grid
+	 */
 	public void setFixedCellDimension(int dimension) {
 		int oldValue = fixedCellDimension;
 		fixedCellDimension = dimension;
@@ -205,6 +204,12 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		repaint();
 	}
 
+
+	/**
+	 * Sets the vertical margin between all elements in the grid.
+	 * Fires {@PropertyChangeEvent} with the {@verticalMargin} property
+	 * @param verticalMargin the vertical margin for this Grid
+	 */
 	public void setVerticalMargin(int verticalMargin) {
 		int oldValue = verticalMargin;
 		this.verticalMargin = verticalMargin;
@@ -213,6 +218,11 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		repaint();
 	}
 
+	/**
+	 * Sets the horizonztal margin between all elements in the grid.
+	 * Fires {@PropertyChangeEvent} with the {@horizonztalMargin} property
+	 * @param horizonztalMargin the horizonztal margin for this Grid
+	 */
 	public void setHorizonztalMargin(int horizonztalMargin) {
 		int oldValue = horizonztalMargin;
 		this.horizonztalMargin = horizonztalMargin;
@@ -331,14 +341,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		getSelectionModel().setSelectionInterval(index, index);
 	}
 
-	protected int checkHorizontalKey(int key, String message) {
-		if ((key == LEFT) || (key == CENTER) || (key == RIGHT)
-				|| (key == LEADING) || (key == TRAILING)) {
-			return key;
-		} else {
-			throw new IllegalArgumentException(message);
-		}
-	}
 
 	public Rectangle getCellBounds(int index) {
 		return getUI().getCellBounds(index);
@@ -393,13 +395,17 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	public void setHorizontalAlignment(int alignment) {
-		if (alignment == horizontalAlignment)
-			return;
-		int oldValue = horizontalAlignment;
-		horizontalAlignment = checkHorizontalKey(alignment,
-				"horizontalAlignment");
-		firePropertyChange("horizontalAlignment", oldValue, horizontalAlignment);
-		repaint();
+		if ((alignment == LEFT) || (alignment == CENTER) || (alignment == RIGHT)
+				|| (alignment == LEADING) || (alignment == TRAILING)) {
+			if (alignment == horizontalAlignment) {
+				return;
+			}
+			int oldValue = horizontalAlignment;
+			horizontalAlignment = alignment;
+			firePropertyChange("horizontalAlignment", oldValue, horizontalAlignment);
+			repaint();
+		} else {
+			throw new IllegalArgumentException("Illegal HorizontalAlignment: " + alignment);
+		}
 	}
-
 }
