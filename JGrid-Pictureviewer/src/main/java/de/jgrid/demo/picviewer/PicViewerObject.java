@@ -15,11 +15,12 @@
 package de.jgrid.demo.picviewer;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import de.jgrid.demo.util.UrlLoader;
 
 public class PicViewerObject {
 
@@ -33,19 +34,25 @@ public class PicViewerObject {
 	
 	private boolean marker;
 	
-	public PicViewerObject(File folder) {
-		this.path = folder.getName();
+	public PicViewerObject(String path) {
+		this(path, 0.0f);
+	}
+	
+	public PicViewerObject(String path, float fraction) {
+		
 		images = new ArrayList<BufferedImage>();
 		
-		for (File pic : folder.listFiles()) {
+		for (int i = 1; i < 10; i++) {
 			try {
-				BufferedImage image = ImageIO.read(pic);
+				BufferedImage image = ImageIO.read(UrlLoader.getInstance().load(path + i + ".jpeg"));
 				if(image != null) {
 					images.add(image);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
+		setFraction(fraction);
 	}
 	
 	public BufferedImage getImage() {
