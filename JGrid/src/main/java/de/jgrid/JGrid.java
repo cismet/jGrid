@@ -39,8 +39,6 @@ import javax.swing.ToolTipManager;
  */
 public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
-	// TODO: Drag&Drop, Sortierung
-
 	private static final long serialVersionUID = 1L;
 	private ListSelectionModel selectionModel;
 	private ListModel dataModel;
@@ -72,7 +70,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 			throw new IllegalArgumentException("dataModel must be non null");
 		}
 
-		//register Tooltips
 		ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 		toolTipManager.registerComponent(this);
 
