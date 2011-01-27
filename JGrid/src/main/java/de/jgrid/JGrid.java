@@ -64,7 +64,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
      * {@code non-null}, model. All {@code JGrid} constructors must delegate to
      * this one.
      *
-     * @param model the model for the ghrid
+     * @param model the model for the grid
      * @exception IllegalArgumentException if the model is {@code null}
      */
 	public JGrid(ListModel model) {
@@ -82,7 +82,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		setAutoscrolls(true);
 		setOpaque(true);
 		updateUI();
-		setDefaultCellRenderer(new DefaultGridRenderer());
+		setDefaultCellRenderer(new DefaultGridCellRenderer());
 	}
 
 	 /**
@@ -116,10 +116,19 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 				this.defaultLabelRenderer);
 	}
 
+	/**
+	 * Getter for the cellLabelCap
+	 * @return cellLabelCap
+	 */
 	public int getCellLabelCap() {
 		return cellLabelCap;
 	}
 
+	/**
+     * Returns {@code true} if the cells in the JGrid are labeled, else {@code false}
+     *
+     * @return {@code true} if the cells in the JGrid are labeled, else {@code false}
+     */
 	public boolean isLabelsVisible() {
 		return labelsVisible;
 	}
@@ -135,48 +144,36 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		firePropertyChange("labelsVisible", oldValue, this.labelsVisible);
 	}
 
+	/**
+	 * Return the Model of the JGrid
+	 * @return The Model of the JGrid
+	 */
 	public ListModel getModel() {
 		return dataModel;
 	}
 
+	/**
+	 * Returns the default renderer for the cells
+	 * @return the default renderer
+	 */
 	public GridCellRenderer getDefaultCellRenderer() {
 		return defaultCellRenderer;
 	}
 
-	public GridCellRenderer getCellRenderer() {
-		return defaultCellRenderer;
-	}
-
-	public int getSelectionMode() {
-		return getSelectionModel().getSelectionMode();
-	}
-
-	public void addSelectionInterval(int anchor, int lead) {
-		getSelectionModel().addSelectionInterval(anchor, lead);
-	}
-
-	public void clearSelection() {
-		getSelectionModel().clearSelection();
-	}
-
+	/**
+	 * Returns the ListSelectionModel
+	 * @return the ListSelectionModel
+	 */
 	public ListSelectionModel getSelectionModel() {
 		return selectionModel;
 	}
 
 	public int getSelectedIndex() {
-		return getMinSelectionIndex();
+		return  getSelectionModel().getMinSelectionIndex();
 	}
 
 	public int getLeadSelectionIndex() {
 		return getSelectionModel().getLeadSelectionIndex();
-	}
-
-	public int getMinSelectionIndex() {
-		return getSelectionModel().getMinSelectionIndex();
-	}
-
-	public int getMaxSelectionIndex() {
-		return getSelectionModel().getMaxSelectionIndex();
 	}
 
 	public GridUI getUI() {
@@ -185,7 +182,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	public void updateUI() {
 		setUI(new MacOsGridUI());
-		GridCellRenderer renderer = getCellRenderer();
+		GridCellRenderer renderer = getDefaultCellRenderer();
 		if (renderer instanceof Component) {
 			SwingUtilities.updateComponentTreeUI((Component) renderer);
 		}
@@ -353,12 +350,12 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	public String getToolTipText(MouseEvent event) {
 		if (event != null) {
 			Point p = event.getPoint();
-			int index = getUI().getCellAt(p);
+			int index = getCellAt(p);
 			
 			if(index >= 0) {
 				Rectangle cellBounds = getCellBounds(index);
 				if(cellBounds != null && cellBounds.contains(p.x, p.y)) {
-					Component rComponent = getDefaultCellRenderer()
+					Component renderer = getDefaultCellRenderer()
 					.getGridCellRendererComponent(
 							this,
 							getModel().getElementAt(index),
@@ -367,22 +364,12 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 							hasFocus()
 									&& getSelectionModel()
 											.getLeadSelectionIndex() == index);
-					if (rComponent instanceof JComponent) {
-						MouseEvent newEvent;
-
-						p.translate(-cellBounds.x, -cellBounds.y);
-						newEvent = new MouseEvent(rComponent, event.getID(), event
-								.getWhen(), event.getModifiers(), p.x, p.y, event
-								.getXOnScreen(), event.getYOnScreen(), event
-								.getClickCount(), event.isPopupTrigger(),
-								MouseEvent.NOBUTTON);
-
-						String tip = ((JComponent) rComponent)
-								.getToolTipText(newEvent);
-
-						if (tip != null) {
-							return tip;
-						}
+					if (renderer instanceof JComponent) {
+						return ((JComponent) renderer)
+								.getToolTipText(new MouseEvent(renderer, event.getID(), event
+										.getWhen(), event.getModifiers(), p.x - cellBounds.x, p.y - cellBounds.y, event
+										.getXOnScreen(), event.getYOnScreen(), event
+										.getClickCount(), event.isPopupTrigger(), event.getButton()));
 					}
 				}
 			}

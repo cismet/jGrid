@@ -344,7 +344,7 @@ public abstract class GridUI extends ComponentUI {
 		}
 		Object value = grid.getModel().getElementAt(index);
 
-		Component rendererComponent = grid.getCellRenderer()
+		Component rendererComponent = grid.getDefaultCellRenderer()
 				.getGridCellRendererComponent(grid, value, index, isSelected,
 						cellHasFocus);
 		rendererPane.paintComponent(g2, rendererComponent, grid, 0, 0,

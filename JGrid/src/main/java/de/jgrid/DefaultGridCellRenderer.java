@@ -14,18 +14,22 @@
  */
 package de.jgrid;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
-public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
+/**
+ * @author hendrikebbers
+ * The default CellRenderer for JGrid. Works like DefaultListRenderer.
+ * 
+ */
+public class DefaultGridCellRenderer extends JLabel implements GridCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 
-	public DefaultGridRenderer() {
+	public DefaultGridCellRenderer() {
 		setHorizontalTextPosition(CENTER);
 		setVerticalTextPosition(CENTER);
 		setHorizontalAlignment(CENTER);
@@ -35,14 +39,10 @@ public class DefaultGridRenderer extends JLabel implements GridCellRenderer {
 	@Override
 	public Component getGridCellRendererComponent(JGrid grid, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
-		setText(value.toString());
-
-		Color bg = null;
-		Color fg = null;
 
 		if (isSelected) {
-			setBackground(bg == null ? grid.getSelectionBackground() : bg);
-			setForeground(fg == null ? grid.getSelectionForeground() : fg);
+			setBackground(grid.getSelectionBackground());
+			setForeground(grid.getSelectionForeground());
 		} else {
 			setBackground(grid.getBackground());
 			setForeground(grid.getForeground());

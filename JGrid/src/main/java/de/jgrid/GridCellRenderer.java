@@ -16,8 +16,26 @@ package de.jgrid;
 
 import java.awt.Component;
 
+/**
+ * Works like the <code>ListCellRenderer</code>
+ * Identifies components that can be used to paint
+ * the cells in a JGrid
+ * 
+ * @author hendrikebbers
+ * @see ListCellRenderer
+ * @see JGrid
+ * @see GridLabelRenderer
+ */
 public interface GridCellRenderer {
 
+	/**
+	 * @param grid The JGrid where the renderer is painting
+	 * @param value The value that will be rendered by thy returning Component
+	 * @param index The cell index in the JGrid 
+	 * @param isSelected true if the cell is selected
+	 * @param cellHasFocus true if the cell has focus
+	 * @return A Component for paint the cell in the JGrid
+	 */
 	public Component getGridCellRendererComponent(JGrid grid, Object value,
 			int index, boolean isSelected, boolean cellHasFocus);
 }

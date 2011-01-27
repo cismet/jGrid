@@ -84,7 +84,7 @@ public class BookshelfUI extends GridUI {
 		}
 		Object value = grid.getModel().getElementAt(index);
 
-		Component rendererComponent = grid.getCellRenderer()
+		Component rendererComponent = grid.getDefaultCellRenderer()
 				.getGridCellRendererComponent(grid, value, index, isSelected,
 						cellHasFocus);
 		rendererPane.add(rendererComponent);
