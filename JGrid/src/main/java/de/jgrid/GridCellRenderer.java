@@ -22,6 +22,8 @@ import java.awt.Component;
  * the cells in a JGrid
  * 
  * @author hendrikebbers
+ * @since 0.1
+ * @version 0.1
  * @see ListCellRenderer
  * @see JGrid
  * @see GridLabelRenderer
@@ -29,6 +31,7 @@ import java.awt.Component;
 public interface GridCellRenderer {
 
 	/**
+	 * Returns a component for rendering / painting the cell with the given index & properties
 	 * @param grid The JGrid where the renderer is painting
 	 * @param value The value that will be rendered by thy returning Component
 	 * @param index The cell index in the JGrid 

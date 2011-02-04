@@ -124,6 +124,12 @@ public abstract class GridUI extends ComponentUI {
 		return -1;
 	}
 
+	/**
+	 * Return the index or -1 if the oindex is not in the range of the ListModel
+	 * @param index
+	 * @param grid
+	 * @return
+	 */
 	private int adjustIndex(int index, JGrid grid) {
 		return index < grid.getModel().getSize() ? index : -1;
 	}

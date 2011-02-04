@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-15"?>
+<jnlp spec="1.0+" codebase="http://www.guigarage.com/downloads/" href="pictureviewer.jnlp">
+    <information>
+        <title>JGrid PictureViewer Demo</title>
+        <vendor>Hendrik Ebbers</vendor>
+        <homepage href="http://www.guigarage.com"/>
+        <description>JGrid PictureViewer Demo</description>
+    </information>
+    <security> 
+      <all-permissions/> 
+    </security> 
+    <resources>
+        <j2se version="1.6"/>
+		<jar href="grid-picviewer.jar"/>
+    </resources>
+    <application-desc main-class="de.jgrid.demo.picviewer.PicViewerDemo"/>
+</jnlp>

@@ -21,9 +21,12 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 
 /**
- * @author hendrikebbers
  * The default CellRenderer for JGrid. Works like DefaultListRenderer.
  * 
+ * @author Hendrik Ebbers
+ * @since 0.1
+ * @version 0.1
+ * @see DefaultListRenderer
  */
 public class DefaultGridCellRenderer extends JLabel implements GridCellRenderer {
 

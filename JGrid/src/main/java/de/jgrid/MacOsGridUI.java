@@ -18,6 +18,12 @@ import java.awt.Color;
 
 import javax.swing.JComponent;
 
+/**
+ * A default UI for the Grid. The UI is for MAC OS and the rendering looks like the grid in iPhoto.
+ * @author Hendrik Ebbers
+ * @since 0.1
+ * @version 0.1
+ */
 public class MacOsGridUI extends GridUI {
 
 	@Override

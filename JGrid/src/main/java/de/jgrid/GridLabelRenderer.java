@@ -21,7 +21,9 @@ import java.awt.Component;
  * Identifies components that can be used to paint
  * the label of a cells in a JGrid
  * 
- * @author hendrikebbers
+ * @author Hendrik Ebbers
+ * @since 0.1
+ * @version 0.1
  * @see ListCellRenderer
  * @see JGrid
  * @see GridCellRenderer
@@ -29,6 +31,7 @@ import java.awt.Component;
 public interface GridLabelRenderer {
 
 	/**
+	 * Returns a component for rendering / painting the label of the cell with the given index & properties
 	 * @param grid The JGrid where the renderer is painting
 	 * @param value The value that will be rendered by thy returning Component
 	 * @param index The cell index in the JGrid 

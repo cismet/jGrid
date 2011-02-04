@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-15"?>
+<jnlp spec="1.0+" codebase="http://www.guigarage.com/downloads/" href="bookshelf.jnlp">
+    <information>
+        <title>JGrid Bookshelf Demo</title>
+        <vendor>Hendrik Ebbers</vendor>
+        <homepage href="http://www.guigarage.com"/>
+        <description>JGrid Bookshelf Demo</description>
+    </information>
+    <security> 
+      <all-permissions/> 
+    </security> 
+    <resources>
+        <j2se version="1.6"/>
+		<jar href="grid-bookshelf.jar"/>
+    </resources>
+    <application-desc main-class="de.jgrid.demo.bookshelf.BookshelfDemo"/>
+</jnlp>
