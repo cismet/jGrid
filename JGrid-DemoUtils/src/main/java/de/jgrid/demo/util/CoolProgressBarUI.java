@@ -181,16 +181,16 @@ public class CoolProgressBarUI extends BasicProgressBarUI {
 		
 		//Border
 		g2.setColor(new Color(0, 0, 0));
-		g2.drawRoundRect(2, 2, c.getWidth() - 4, c.getHeight() - 4, 20, 20);
+		g2.drawRoundRect(2, 2, c.getWidth() - 4, c.getHeight() - 3, 20, 20);
 
 		g2.setStroke(new BasicStroke(1.5f));
-		g2.setColor(new Color(100, 100, 100));
-		g2.drawRoundRect(2, 1, c.getWidth() - 4, c.getHeight() - 4, 20, 20);
+		g2.setColor(new Color(100, 100, 100, 100));
+		g2.drawRoundRect(2, 1, c.getWidth() - 4, c.getHeight() - 3, 20, 20);
 		g2.dispose();
 		
 		g.drawImage(offScreenImage, 0, 0, null);
 		
-		paintBar(g, c, new Rectangle(4, 3, (int) ((double)(c.getWidth() - 8) * progressBar.getPercentComplete()), c.getHeight() - 8));
+		paintBar(g, c, new Rectangle(4, 4, (int) ((double)(c.getWidth() - 8) * progressBar.getPercentComplete()), c.getHeight() - 8));
 		paintText(g, c);
 	}
 	

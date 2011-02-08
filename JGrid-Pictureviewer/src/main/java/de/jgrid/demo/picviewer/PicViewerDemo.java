@@ -27,7 +27,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -114,8 +113,6 @@ public class PicViewerDemo extends JFrame {
 
 		JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BorderLayout());
-		JButton creditsButton = new JButton("image credits");
-		controlPanel.add(creditsButton, BorderLayout.WEST);
 
 		final JSlider slider = new JSlider(128, 256, grid
 				.getFixedCellDimension());

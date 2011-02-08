@@ -14,13 +14,19 @@
  */
 package de.jgrid.demo.bookshelf;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -40,20 +46,38 @@ public class BookshelfDemo extends JFrame {
 		setTitle("BookshelfDemo");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		
-		final JFrame loadFrame = new JFrame("Loading Demo");
-		loadFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final JProgressBar bar = new JProgressBar();
 		bar.setForeground(Color.ORANGE);
 		bar.setUI(new CoolProgressBarUI());
-		loadFrame.getContentPane().setLayout(
+		final JPanel loadPanel = new JPanel() {
+
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(java.awt.Graphics g) {
+				Graphics2D g2 = (Graphics2D) g.create();
+				g2.setColor(Color.DARK_GRAY);
+				g2.setPaint(new GradientPaint(0, 0, Color.DARK_GRAY, 0, getHeight(), Color.gray));
+				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.fillRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 60, 60);
+				g2.setColor(Color.BLACK);
+				g2.setStroke(new BasicStroke(1.5f));
+				g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 60, 60);
+			};
+		};
+		loadPanel.setLayout(
 				new FlowLayout(SwingUtilities.CENTER, 20, 20));
-		loadFrame.getContentPane().add(bar);
-		loadFrame.setResizable(false);
-		loadFrame.pack();
-		loadFrame.setLocationRelativeTo(null);
-		loadFrame.setBackground(Color.DARK_GRAY);
-		loadFrame.setVisible(true);
+		loadPanel.add(bar);
+		
+		final JPanel panelwrapper = new JPanel();
+		panelwrapper.setOpaque(false);
+		panelwrapper.setLayout(new FlowLayout(FlowLayout.CENTER));
+		panelwrapper.add(loadPanel);
+		
+		final JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setLayout(new MaximumLayout());
+		layeredPane.setLayer(panelwrapper, JLayeredPane.DEFAULT_LAYER + 1);
+		layeredPane.add(panelwrapper);
 		
 		final DefaultListModel model = new DefaultListModel();
 		
@@ -113,8 +137,7 @@ public class BookshelfDemo extends JFrame {
 
 			@Override
 			protected void done() {
-				loadFrame.setVisible(false);
-				setVisible(true);
+				layeredPane.remove(panelwrapper);
 			}
 		};
 		worker.execute();
@@ -124,9 +147,15 @@ public class BookshelfDemo extends JFrame {
 		grid.setUI(new BookshelfUI());
 		JScrollPane scrollPane = new JScrollPane(grid);
 		scrollPane.setBorder(null);
-		getContentPane().add(scrollPane);
+		
+		layeredPane.setLayer(scrollPane, JLayeredPane.DEFAULT_LAYER);
+		layeredPane.add(scrollPane);
+		
+		
+		getContentPane().add(layeredPane);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 	
 	public static void main(String[] args) {
