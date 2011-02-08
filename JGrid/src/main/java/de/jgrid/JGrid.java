@@ -21,6 +21,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
+import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
 import javax.swing.JViewport;
@@ -30,6 +31,8 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 /**
  * A Component that displays a list of Elements in a grid. The Elements stored is  a separate model, {@code ListModel}. So you can use a {@code JList} parallel to to the JGrid
@@ -39,11 +42,11 @@ import javax.swing.ToolTipManager;
  * @version 0.1
  * @see JList
  */
-public class JGrid extends JComponent implements Scrollable, SwingConstants {
+public class JGrid extends JComponent implements Scrollable, SwingConstants, ListDataListener {
 
 	private static final long serialVersionUID = 1L;
 	private ListSelectionModel selectionModel;
-	private ListModel dataModel;
+	private ListModel model;
 	private GridCellRenderer defaultCellRenderer;
 	private GridLabelRenderer defaultLabelRenderer;
 	private int fixedCellDimension = 128;
@@ -59,6 +62,10 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	
 	private static final String uiClassID = "GridUI";
 
+	public JGrid() {
+		this(new DefaultListModel());
+	}
+	
 	/**
      * Constructs a {@code JGrid} that displays elements from the specified,
      * {@code non-null}, model. All {@code JGrid} constructors must delegate to
@@ -76,8 +83,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 		toolTipManager.registerComponent(this);
 
-		this.dataModel = model;
 		selectionModel = createDefaultSelectionModel();
+		setModel(model);
 		
 		setAutoscrolls(true);
 		setOpaque(true);
@@ -85,6 +92,25 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		setDefaultCellRenderer(new DefaultGridCellRenderer());
 	}
 
+    public void setModel(ListModel model) {
+        if (model == null) {
+            throw new IllegalArgumentException("model must be non null");
+        }
+        ListModel oldValue = this.model;
+        if(oldValue != null) {
+        	oldValue.removeListDataListener(this);
+        }
+        this.model = model;
+        this.model.addListDataListener(this);
+        firePropertyChange("model", oldValue, this.model);
+        selectionModel.clearSelection();
+    }
+
+    protected void resizeAndRepaint() {
+        revalidate();
+        repaint();
+    }
+	
 	 /**
      * Returns an default instance of {@code ListSelectionModel}; called
      * during construction to initialize the grids selectionModel. Normally this returns a {@code DefaultListSelectionModel}
@@ -159,7 +185,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	 * @see JList
 	 */
 	public ListModel getModel() {
-		return dataModel;
+		return model;
 	}
 
 	/**
@@ -529,5 +555,20 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		} else {
 			throw new IllegalArgumentException("Illegal HorizontalAlignment: " + alignment);
 		}
+	}
+
+	@Override
+	public void contentsChanged(ListDataEvent e) {
+		resizeAndRepaint();
+	}
+
+	@Override
+	public void intervalAdded(ListDataEvent e) {
+		resizeAndRepaint();
+	}
+
+	@Override
+	public void intervalRemoved(ListDataEvent e) {
+		resizeAndRepaint();
 	}
 }
