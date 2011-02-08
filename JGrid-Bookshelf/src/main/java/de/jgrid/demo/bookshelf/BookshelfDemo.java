@@ -57,7 +57,6 @@ public class BookshelfDemo extends JFrame {
 		
 		final DefaultListModel model = new DefaultListModel();
 		
-		
 		SwingWorker<Void, Book> worker = new SwingWorker<Void, Book>() {
 
 			@Override
@@ -120,13 +119,12 @@ public class BookshelfDemo extends JFrame {
 		};
 		worker.execute();
 		
-		
-		
-		
 		JGrid grid = new JGrid(model);
 		grid.setDefaultCellRenderer(new OpenLibraryGridRenderer());
 		grid.setUI(new BookshelfUI());
-		getContentPane().add(new JScrollPane(grid));
+		JScrollPane scrollPane = new JScrollPane(grid);
+		scrollPane.setBorder(null);
+		getContentPane().add(scrollPane);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
 	}
