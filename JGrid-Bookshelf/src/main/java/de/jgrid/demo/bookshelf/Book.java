@@ -27,10 +27,11 @@ public class Book {
 	
 	private BufferedImage cover;
 	
-	public Book(String titel, String isbn) {
+	public Book(String titel, String coverUrl) {
 		this.titel = titel;
 		try {
-			cover = ImageIO.read(new URL("http://covers.openlibrary.org/b/isbn/" + isbn + "-L.jpg"));
+//			cover = ImageIO.read(new URL("http://covers.openlibrary.org/b/isbn/" + isbn + "-L.jpg"));
+			cover = ImageIO.read(new URL(coverUrl));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
