@@ -14,10 +14,14 @@
  */
 package de.jgrid.demo.bookshelf;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
@@ -34,11 +38,13 @@ public class OpenLibraryGridRenderer extends JComponent implements
 	private static final long serialVersionUID = 1L;
 	private Book book;
 	
+	private boolean isSelected;
+	
 	@Override
 	public Component getGridCellRendererComponent(JGrid grid, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		this.book = null;
-		
+		this.isSelected = isSelected;
 		if(value instanceof Book) {
 			this.book = (Book) value;
 		}
@@ -75,11 +81,30 @@ public class OpenLibraryGridRenderer extends JComponent implements
 			int startY = getHeight() - height;
 			
 			Graphics2D g2 = (Graphics2D) g.create();
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			
-			//TODO: Schatten
+			BufferedImage coverImage = ImageUtilities.getOptimalScalingImage(book.getCover(), width, height);
 			
-			g2.drawImage(ImageUtilities.getOptimalScalingImage(book.getCover(), width, height), startX, startY, null);
+			g2.setStroke(new BasicStroke(2.5f));
+			if(isSelected) {
+				g2.setColor(new Color(0, 0, 0, 140));
+			} else {
+				g2.setColor(new Color(0, 0, 0, 100));
+			}
+			g2.fillOval(startX - 8, startY + coverImage.getHeight() - 8, coverImage.getWidth() + 16, 8);
+			Polygon shape = new Polygon();
+			shape.addPoint(startX - 8, startY + coverImage.getHeight() - 4);
+			shape.addPoint(startX - 8 + coverImage.getWidth() + 16, startY + coverImage.getHeight() - 4);
+			shape.addPoint(startX + coverImage.getWidth(), startY - 2);
+			shape.addPoint(startX, startY - 2);
+			g2.fill(shape);
+			
+			g2.setColor(new Color(0, 0, 0, 80));
+			g2.setStroke(new BasicStroke(0.8f));
+			g2.drawImage(coverImage, startX, startY - 2, null);
+			g2.drawRect(startX, startY - 2, coverImage.getWidth(), coverImage.getHeight());
 			g2.dispose();
 		}
 	}
