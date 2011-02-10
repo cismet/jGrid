@@ -94,11 +94,18 @@ public class OpenLibraryGridRenderer extends JComponent implements
 				g2.setColor(new Color(0, 0, 0, 100));
 			}
 			g2.fillOval(startX - 8, startY + coverImage.getHeight() - 8, coverImage.getWidth() + 16, 8);
+			
 			Polygon shape = new Polygon();
 			shape.addPoint(startX - 8, startY + coverImage.getHeight() - 4);
 			shape.addPoint(startX - 8 + coverImage.getWidth() + 16, startY + coverImage.getHeight() - 4);
-			shape.addPoint(startX + coverImage.getWidth(), startY - 2);
+			
+			
+			shape.addPoint(startX + coverImage.getWidth() + coverImage.getWidth() / 20, startY + coverImage.getHeight() / 20);
+			shape.addPoint(startX + coverImage.getWidth(), startY - 3);
+			
 			shape.addPoint(startX, startY - 2);
+			shape.addPoint(startX - coverImage.getWidth() / 20, startY + coverImage.getHeight() / 20);
+			
 			g2.fill(shape);
 			
 			g2.setColor(new Color(0, 0, 0, 80));
