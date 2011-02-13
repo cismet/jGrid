@@ -22,8 +22,6 @@ public class PicViewerObject implements Cloneable{
 
 	private List<BufferedImage> images;
 	
-	private String path;
-	
 	private float fraction;
 	
 	private int index;
@@ -68,10 +66,6 @@ public class PicViewerObject implements Cloneable{
 	
 	public Object getValueForFraction() {
 		return getImage();
-	}
-
-	public String getPath() {
-		return path;
 	}
 	
 	public float getFraction() {

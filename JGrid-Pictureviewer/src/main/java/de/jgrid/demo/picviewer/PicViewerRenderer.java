@@ -35,8 +35,6 @@ public class PicViewerRenderer extends JComponent implements GridCellRenderer {
 	
 	private BufferedImage image;
 	
-	private String tooltip;
-	
 	private boolean paintMarker = false;
 	
 	private float markerFraction;
@@ -45,20 +43,13 @@ public class PicViewerRenderer extends JComponent implements GridCellRenderer {
 	public Component getGridCellRendererComponent(JGrid grid, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		image = null;
-		tooltip = "unknown";
 		paintMarker = false;
 		if(value instanceof PicViewerObject) {
 			image = ((PicViewerObject) value).getImage();
-			tooltip = ((PicViewerObject) value).getPath() + "(" + ((PicViewerObject) value).getIndex() + ")";
 			markerFraction = ((PicViewerObject) value).getFraction();
 			paintMarker = ((PicViewerObject) value).isMarker();
 		}
 		return this;
-	}
-
-	@Override
-	public String getToolTipText() {
-		return tooltip;
 	}
 	
 	@Override
