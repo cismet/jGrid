@@ -18,11 +18,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
-import de.jgrid.demo.util.UrlLoader;
-
-public class PicViewerObject {
+public class PicViewerObject implements Cloneable{
 
 	private List<BufferedImage> images;
 	
@@ -34,25 +30,24 @@ public class PicViewerObject {
 	
 	private boolean marker;
 	
-	public PicViewerObject(String path) {
-		this(path, 0.0f);
+	public PicViewerObject() {
+		images = new ArrayList<BufferedImage>();
+		setFraction(0.0f);
 	}
 	
-	public PicViewerObject(String path, float fraction) {
-		
-		images = new ArrayList<BufferedImage>();
-		
-		for (int i = 1; i < 10; i++) {
-			try {
-				BufferedImage image = ImageIO.read(UrlLoader.getInstance().load(path + i + ".jpeg"));
-				if(image != null) {
-					images.add(image);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	@Override
+	protected Object clone() {
+		PicViewerObject clone = new PicViewerObject();
+		for(BufferedImage image : images) {
+			clone.addImage(image);
 		}
-		setFraction(fraction);
+		clone.setFraction(getFraction());
+		return clone;
+	}
+	
+	public void addImage(BufferedImage image) {
+		images.add(image);
+		setFraction(getFraction());
 	}
 	
 	public BufferedImage getImage() {
@@ -84,8 +79,8 @@ public class PicViewerObject {
 	}
 	
 	public void setFraction(float fraction) {
-		this.fraction = fraction;
-		this.index = (int) (fraction * (float)(images.size()));
+		this.fraction = Math.max(0.0f, Math.min(1.0f, fraction));
+		this.index = (int) (this.fraction * (float)(images.size()));
 	}
 
 }

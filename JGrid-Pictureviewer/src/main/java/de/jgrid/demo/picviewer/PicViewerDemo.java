@@ -21,6 +21,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -152,34 +153,34 @@ public class PicViewerDemo extends JFrame {
 
 			@Override
 			protected Void doInBackground() throws Exception {
-				int repeatCount = 5;
-				for (int i = 1; i <= repeatCount; i++) {
+				setProgress(0);
+				publish(generateViewObject("beach"));
+				setProgress((int) (100.0f / 6.0f));
+				publish(generateViewObject("desert"));
+				setProgress((int) (100.0f / 6.0f) * 2);
+				publish(generateViewObject("water"));
+				setProgress((int) (100.0f / 6.0f) * 3);
+				publish(generateViewObject("farm"));
+				setProgress((int) (100.0f / 6.0f) * 4);
+				publish(generateViewObject("nature"));
+				setProgress((int) (100.0f / 6.0f) * 5);
+				publish(generateViewObject("travel"));
+				setProgress(100);
+				return null;
+			}
+
+			private PicViewerObject generateViewObject(String folder) {
+				PicViewerObject obj = new PicViewerObject();
+				for (int i = 1; i <= 10; i++) {
 					try {
-						setProgress((i - 1) * 100 / repeatCount + 4);
-						publish(new PicViewerObject(
-								"/de/jgrid/demo/picviewer/coast/",
-								(float) i / 5.0f));
-						setProgress((i - 1) * 100 / repeatCount + 8);
-						publish(new PicViewerObject(
-								"/de/jgrid/demo/picviewer/dogs/",
-								(float) i / 5.0f));
-						setProgress((i - 1) * 100 / repeatCount + 12);
-						publish(new PicViewerObject(
-								"/de/jgrid/demo/picviewer/emotions/",
-								(float) i / 5.0f));
-						setProgress((i - 1) * 100 / repeatCount + 16);
-						publish(new PicViewerObject(
-								"/de/jgrid/demo/picviewer/flowers/",
-								(float) i / 5.0f));
-						setProgress((i - 1) * 100 / repeatCount + 20);
-						publish(new PicViewerObject(
-								"/de/jgrid/demo/picviewer/landscape/",
-								(float) i / 5.0f));
+						obj.addImage(ImageIO.read(new URL(
+								"http://guigarage.com/downloads/viewerpics/" + folder + "/"
+										+ i + ".png")));
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}
 				}
-				return null;
+				return obj;
 			}
 
 			@Override
@@ -193,6 +194,14 @@ public class PicViewerDemo extends JFrame {
 
 			@Override
 			protected void done() {
+				int size = model.getSize();
+				for (int j = 0; j < 3; j++) {
+					for (int i = 0; i < size; i++) {
+						PicViewerObject o = (PicViewerObject) ((PicViewerObject) model.get(i)).clone();
+						o.setFraction((float) (Math.random()));
+						model.addElement(o);
+					}
+				}
 				loadFrame.setVisible(false);
 				setVisible(true);
 			}
