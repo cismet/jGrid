@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid;
+package de.jgrid.ui;
 
 import java.awt.Color;
 

@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid;
+package de.jgrid.ui;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -38,6 +38,8 @@ import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.ComponentUI;
+
+import de.jgrid.JGrid;
 
 public abstract class GridUI extends ComponentUI {
 
@@ -350,7 +352,7 @@ public abstract class GridUI extends ComponentUI {
 		}
 		Object value = grid.getModel().getElementAt(index);
 
-		Component rendererComponent = grid.getDefaultCellRenderer()
+		Component rendererComponent = grid.getCellRenderer(index)
 				.getGridCellRendererComponent(grid, value, index, isSelected,
 						cellHasFocus);
 		rendererPane.paintComponent(g2, rendererComponent, grid, 0, 0,

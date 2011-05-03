@@ -69,7 +69,7 @@ public class PicViewerDemo extends JFrame {
 		loadFrame.setVisible(true);
 
 		final JGrid grid = new JGrid(model);
-		grid.setDefaultCellRenderer(new PicViewerRenderer());
+		grid.getCellRendererManager().setDefaultRenderer(new PicViewerRenderer());
 		grid.setFixedCellDimension(160);
 		grid.addMouseMotionListener(new MouseAdapter() {
 

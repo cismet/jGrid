@@ -24,15 +24,25 @@ import java.awt.event.MouseEvent;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JViewport;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+
+import de.jgrid.renderer.GridCellRenderer;
+import de.jgrid.renderer.GridCellRendererManager;
+import de.jgrid.renderer.GridLabelRenderer;
+import de.jgrid.renderer.GridRendererManagerListener;
+import de.jgrid.sort.ListSorter;
+import de.jgrid.sort.ListSorterEvent;
+import de.jgrid.sort.ListSorterListener;
+import de.jgrid.ui.GridUI;
+import de.jgrid.ui.MacOsGridUI;
 
 /**
  * A Component that displays a list of Elements in a grid. The Elements stored is  a separate model, {@code ListModel}. So you can use a {@code JList} parallel to to the JGrid
@@ -42,12 +52,12 @@ import javax.swing.event.ListDataListener;
  * @version 0.1
  * @see JList
  */
-public class JGrid extends JComponent implements Scrollable, SwingConstants, ListDataListener {
+public class JGrid extends JComponent implements Scrollable, SwingConstants, ListDataListener, GridRendererManagerListener, ListSorterListener {
 
 	private static final long serialVersionUID = 1L;
 	private ListSelectionModel selectionModel;
 	private ListModel model;
-	private GridCellRenderer defaultCellRenderer;
+	private GridCellRendererManager cellRendererManager;
 	private GridLabelRenderer defaultLabelRenderer;
 	private int fixedCellDimension = 128;
 	private int cellLabelCap = 16;
@@ -59,6 +69,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	private Color cellBackground;
 	private int horizontalAlignment = CENTER;
 	private boolean labelsVisible = true;
+	
+	private ListSorter sorter;
 	
 	private static final String uiClassID = "GridUI";
 
@@ -85,27 +97,105 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 
 		selectionModel = createDefaultSelectionModel();
 		setModel(model);
+//		setSorter(new DefaultListSorter());
 		
 		setAutoscrolls(true);
 		setOpaque(true);
+		setCellRendererManager(new GridCellRendererManager());
 		updateUI();
-		setDefaultCellRenderer(new DefaultGridCellRenderer());
 	}
-
+	
+	public void setSorter(ListSorter sorter) {
+		
+		ListSorter oldSorter = this.sorter;
+		
+		if(oldSorter != null) {
+			oldSorter.removeListSorterListener(this);
+			getModel().removeListDataListener(oldSorter);
+			oldSorter.setModel(null);
+		}
+		
+		this.sorter = sorter;
+		if(this.sorter != null) {
+			this.sorter.addListSorterListener(this);
+			this.sorter.setModel(model);
+			getModel().addListDataListener(this.sorter);
+		}
+		
+		firePropertyChange("sorter", oldSorter, this.sorter);
+		
+		resizeAndRepaint();
+	}
+	
+	public ListSorter getSorter() {
+		return sorter;
+	}
+	
+	public void setCellRendererManager(
+			GridCellRendererManager cellRendererManager) {
+		if(cellRendererManager == null) {
+			throw new IllegalArgumentException("cellRendererManager must be non null");
+		}
+		
+		GridCellRendererManager oldManager = this.cellRendererManager;
+		if(oldManager != null) {
+			oldManager.removeGridRendererManagerListener(this);
+		}
+		
+		this.cellRendererManager = cellRendererManager;
+		this.cellRendererManager.removeGridRendererManagerListener(this);
+		cellRendererManager.updateRendererUI();
+		
+		firePropertyChange("cellRendererManager", oldManager, this.cellRendererManager);
+		
+		resizeAndRepaint();
+	}
+	
+	public GridCellRendererManager getCellRendererManager() {
+		return cellRendererManager;
+	}
+	
     public void setModel(ListModel model) {
         if (model == null) {
             throw new IllegalArgumentException("model must be non null");
         }
-        ListModel oldValue = this.model;
-        if(oldValue != null) {
-        	oldValue.removeListDataListener(this);
+        ListModel oldModel = this.model;
+        if(oldModel != null) {
+        	oldModel.removeListDataListener(this);
+        	oldModel.removeListDataListener(getSorter());
         }
         this.model = model;
         this.model.addListDataListener(this);
-        firePropertyChange("model", oldValue, this.model);
+        
+        if(this.sorter != null) {
+        	this.model.addListDataListener(sorter);
+            this.sorter.setModel(this.model);
+        }
+        firePropertyChange("model", oldModel, this.model);
         selectionModel.clearSelection();
     }
 
+	public int getViewCellCount() {
+		if(getSorter() != null) {
+			return getSorter().getViewCellCount();
+		}
+		return getModel().getSize();
+	}
+	
+	public int convertCellIndexToModel(int index) {
+		if(getSorter() != null) {
+			return getSorter().convertCellIndexToModel(index);
+		}
+		return index;
+	}
+	
+	public int convertCellIndexToView(int index) {
+		if(getSorter() != null) {
+			return getSorter().convertCellIndexToView(index);
+		}
+		return index;
+	}
+    
     protected void resizeAndRepaint() {
         revalidate();
         repaint();
@@ -188,14 +278,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		return model;
 	}
 
-	/**
-	 * Returns the default renderer for the cells
-	 * @return the default renderer
-	 * @since 0.1
-	 */
-	public GridCellRenderer getDefaultCellRenderer() {
-		return defaultCellRenderer;
-	}
+	
 
 	/**
 	 * Returns the ListSelectionModel
@@ -238,10 +321,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 
 	public void updateUI() {
 		setUI(new MacOsGridUI());
-		GridCellRenderer renderer = getDefaultCellRenderer();
-		if (renderer instanceof Component) {
-			SwingUtilities.updateComponentTreeUI((Component) renderer);
-		}
+		cellRendererManager.updateRendererUI();
 	}
 
 	/**
@@ -312,19 +392,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	 */
 	public int getVerticalMargin() {
 		return verticalMargin;
-	}
-
-	/**
-	 * Setter for the default renderer. This renderer will be used for every cell
-	 * Fires <code>PropertyChangeEvent</code> with the <code>defaultCellRenderer</code> propertyname
-	 * @param cellRenderer the new default renderer
-	 * @see GridCellRenderer
-	 * @since 0.1
-	 */
-	public void setDefaultCellRenderer(GridCellRenderer cellRenderer) {
-		GridCellRenderer oldValue = this.defaultCellRenderer;
-		this.defaultCellRenderer = cellRenderer;
-		firePropertyChange("defaultCellRenderer", oldValue, cellRenderer);
 	}
 
 	public String getUIClassID() {
@@ -489,7 +556,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	 * Returns the index of the cell at the given point. Returns -1 if no cell is at this point
 	 * @param point the pint in the grid
 	 * @return the index of the cell at the point
-	 * @see de.jgrid.GridUI
+	 * @see de.jgrid.ui.GridUI
 	 * @since 0.1
 	 */
 	public int getCellAt(Point point) {
@@ -504,7 +571,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 			if(index >= 0) {
 				Rectangle cellBounds = getCellBounds(index);
 				if(cellBounds != null && cellBounds.contains(p.x, p.y)) {
-					Component renderer = getDefaultCellRenderer()
+					Component renderer = getCellRenderer(index)
 					.getGridCellRendererComponent(
 							this,
 							getModel().getElementAt(index),
@@ -526,6 +593,11 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		return super.getToolTipText();
 	}
 
+	 public GridCellRenderer getCellRenderer(int index) {
+		 //TODO: Vererbung fehlt hier všllig!!!
+		 return cellRendererManager.getRendererForClass(getModel().getElementAt(index).getClass());
+	 }
+	
 	/**
 	 * Getter for the horizontal alignment. <code>LEFT</code> / <code>CENTER</code> / <code>RIGHT</code> / <code>LEADING</code> & <code>TRAILING</code> allowed
 	 * @return the horizontal alignment
@@ -569,6 +641,11 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 
 	@Override
 	public void intervalRemoved(ListDataEvent e) {
+		resizeAndRepaint();
+	}
+
+	@Override
+	public void sortingChanged(ListSorterEvent e) {
 		resizeAndRepaint();
 	}
 }

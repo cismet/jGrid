@@ -32,8 +32,8 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
-import de.jgrid.GridUI;
 import de.jgrid.demo.util.UrlLoader;
+import de.jgrid.ui.GridUI;
 
 public class BookshelfUI extends GridUI {
 
@@ -118,7 +118,7 @@ public class BookshelfUI extends GridUI {
 		}
 		Object value = grid.getModel().getElementAt(index);
 
-		Component rendererComponent = grid.getDefaultCellRenderer()
+		Component rendererComponent = grid.getCellRenderer(index)
 				.getGridCellRendererComponent(grid, value, index, isSelected,
 						cellHasFocus);
 		rendererPane.add(rendererComponent);

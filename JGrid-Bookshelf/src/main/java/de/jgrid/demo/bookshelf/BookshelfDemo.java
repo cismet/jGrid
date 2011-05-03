@@ -157,7 +157,7 @@ public class BookshelfDemo extends JFrame {
 		worker.execute();
 		
 		final JGrid grid = new JGrid(model);
-		grid.setDefaultCellRenderer(new OpenLibraryGridRenderer());
+		grid.getCellRendererManager().setDefaultRenderer(new OpenLibraryGridRenderer());
 		grid.setUI(new BookshelfUI());
 		JScrollPane scrollPane = new JScrollPane(grid);
 		scrollPane.setBorder(null);

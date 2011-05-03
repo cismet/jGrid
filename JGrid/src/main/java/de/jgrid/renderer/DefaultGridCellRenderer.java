@@ -12,13 +12,15 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid;
+package de.jgrid.renderer;
 
 import java.awt.Component;
 import java.awt.Rectangle;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
+
+import de.jgrid.JGrid;
 
 /**
  * The default CellRenderer for JGrid. Works like DefaultListRenderer.
