@@ -2,12 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>JGrid-DemoUtils</groupId>
   <artifactId>JGrid-DemoUtils</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <dependencies>
   	<dependency>
   		<groupId>JGrid</groupId>
   		<artifactId>JGrid</artifactId>
-  		<version>0.2-SNAPSHOT</version>
+  		<version>0.2</version>
   	</dependency>
   </dependencies>
   <build>
