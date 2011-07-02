@@ -7,12 +7,12 @@
   	<dependency>
   		<groupId>JGrid</groupId>
   		<artifactId>JGrid</artifactId>
-  		<version>0.2</version>
+  		<version>0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>JGrid-DemoUtils</groupId>
   		<artifactId>JGrid-DemoUtils</artifactId>
-  		<version>0.2</version>
+  		<version>0.3-SNAPSHOT</version>
   	</dependency>
   </dependencies>
     <build>

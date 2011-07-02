@@ -24,7 +24,7 @@ import javax.swing.JComponent;
  * @since 0.1
  * @version 0.1
  */
-public class MacOsGridUI extends GridUI {
+public class MacOsGridUI extends BasicGridUI {
 
 	@Override
 	public void installUI(JComponent c) {

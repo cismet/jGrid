@@ -33,9 +33,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import de.jgrid.demo.util.UrlLoader;
+import de.jgrid.ui.BasicGridUI;
 import de.jgrid.ui.GridUI;
 
-public class BookshelfUI extends GridUI {
+public class BookshelfUI extends BasicGridUI {
 
 	BufferedImage backgroundImage;
 	

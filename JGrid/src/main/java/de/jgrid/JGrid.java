@@ -41,7 +41,7 @@ import de.jgrid.renderer.GridRendererManagerListener;
 import de.jgrid.sort.ListSorter;
 import de.jgrid.sort.ListSorterEvent;
 import de.jgrid.sort.ListSorterListener;
-import de.jgrid.ui.GridUI;
+import de.jgrid.ui.BasicGridUI;
 import de.jgrid.ui.MacOsGridUI;
 
 /**
@@ -315,8 +315,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	 * @return the UIClass
 	 * @since 0.1
 	 */
-	public GridUI getUI() {
-		return (GridUI) ui;
+	public BasicGridUI getUI() {
+		return (BasicGridUI) ui;
 	}
 
 	public void updateUI() {
@@ -403,7 +403,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	 * @param ui the new UI
 	 * @since 0.1
 	 */
-	public void setUI(GridUI ui) {
+	public void setUI(BasicGridUI ui) {
 		super.setUI(ui);
 	}
 
@@ -556,7 +556,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	 * Returns the index of the cell at the given point. Returns -1 if no cell is at this point
 	 * @param point the pint in the grid
 	 * @return the index of the cell at the point
-	 * @see de.jgrid.ui.GridUI
+	 * @see de.jgrid.ui.BasicGridUI
 	 * @since 0.1
 	 */
 	public int getCellAt(Point point) {
@@ -594,7 +594,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	}
 
 	 public GridCellRenderer getCellRenderer(int index) {
-		 //TODO: Vererbung fehlt hier všllig!!!
+		 //TODO: Vererbung fehlt hier vï¿½llig!!!
 		 return cellRendererManager.getRendererForClass(getModel().getElementAt(index).getClass());
 	 }
 	
