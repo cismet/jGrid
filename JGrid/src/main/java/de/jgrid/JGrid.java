@@ -594,7 +594,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	}
 
 	 public GridCellRenderer getCellRenderer(int index) {
-		 //TODO: Vererbung fehlt hier v�llig!!!
+		 //TODO: Vererbung fehlt hier völlig!!!
 		 return cellRendererManager.getRendererForClass(getModel().getElementAt(index).getClass());
 	 }
 	

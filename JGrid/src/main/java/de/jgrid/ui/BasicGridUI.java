@@ -144,7 +144,7 @@ public abstract class BasicGridUI extends GridUI {
 	}
 
 	/**
-	 * Return the index or -1 if the oindex is not in the range of the ListModel
+	 * Return the index or -1 if the index is not in the range of the ListModel
 	 * 
 	 * @param index
 	 * @param grid
@@ -199,7 +199,7 @@ public abstract class BasicGridUI extends GridUI {
 		int row = 0;
 		int indexInRow = 0;
 
-		// Damit Zentriert, wird Start-X abh�ngig von breite gesetzt
+		// Damit Zentriert, wird Start-X abhöngig von breite gesetzt
 		// TODO: grid.INSETS beachten!!!!!
 		int widthOneCell = grid.getHorizonztalMargin()
 				+ grid.getHorizonztalMargin() + grid.getFixedCellDimension();
