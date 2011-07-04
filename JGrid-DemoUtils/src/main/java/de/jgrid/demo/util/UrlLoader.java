@@ -28,7 +28,7 @@ public class UrlLoader {
 	            url = ClassLoader.getSystemResource(path);
 	        }
 	        if (url == null) {
-	            throw new IOException("URL für " + path + " konnte nicht erstellt werden!");
+	            throw new IOException("URL f√ºr " + path + " konnte nicht erstellt werden!");
 	        }
 	        return url;
 	    }
