@@ -19,6 +19,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -29,21 +30,21 @@ import java.util.Map.Entry;
 
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import de.jgrid.JGrid;
 
 public abstract class BasicGridUI extends GridUI {
 
 	protected JGrid grid;
-	private boolean debug = false;
 	private int columnCount = -1;
 	private int rowCount = -1;
 	private Map<Integer, Rectangle> cellBounds;
 	private KeyAdapter keyInputHandler;
 	private MouseAdapter mouseInputHandler;
 	private CellRendererPane rendererPane;
-
 
 	@Override
 	public void installUI(JComponent c) {
@@ -59,12 +60,21 @@ public abstract class BasicGridUI extends GridUI {
 		mouseInputHandler = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int index = getCellAt(e.getPoint());
-				if (index >= 0) {
-					grid.requestFocus();
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					int index = getCellAt(e.getPoint());
+					if (index >= 0) {
+						grid.requestFocus();
+					}
+					if(e.isControlDown()) {
+						//TODO: cmd on Mac
+						grid.getSelectionModel().addSelectionInterval(index, index);
+					} else if(e.isShiftDown()){
+						grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel().getLeadSelectionIndex(), index);
+					}else {
+						grid.setSelectedIndex(index);
+					}
+				
 				}
-				grid.setSelectedIndex(index);
-
 				// TODO: nur alte & neue Selektion repainten...
 				grid.repaint();
 			}
@@ -89,9 +99,9 @@ public abstract class BasicGridUI extends GridUI {
 					int row = getRowForIndex(selectedIndex);
 					int column = getColumnForIndex(selectedIndex);
 
-						int nextIndex = Math.min(grid.getModel().getSize() - 1,
-								getIndexAt(row + 1, column));
-						grid.setSelectedIndex(nextIndex);
+					int nextIndex = Math.min(grid.getModel().getSize() - 1,
+							getIndexAt(row + 1, column));
+					grid.setSelectedIndex(nextIndex);
 					// TODO: nur alte & neue Selektion repainten...
 					grid.repaint();
 				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -132,13 +142,13 @@ public abstract class BasicGridUI extends GridUI {
 	}
 
 	protected boolean isDebugMode() {
-		return debug;
+		return "true".equals(System.getProperty("jgrid.debug", "false"));
 	}
-	
+
 	protected CellRendererPane getRendererPane() {
 		return rendererPane;
 	}
-	
+
 	/**
 	 * Return the index or -1 if the index is not in the range of the ListModel
 	 * 
@@ -195,7 +205,7 @@ public abstract class BasicGridUI extends GridUI {
 		int row = 0;
 		int indexInRow = 0;
 
-		// Damit Zentriert, wird Start-X abhöngig von breite gesetzt
+		// Damit Zentriert, wird Start-X abhängig von breite gesetzt
 		// TODO: grid.INSETS beachten!!!!!
 		int widthOneCell = grid.getHorizonztalMargin()
 				+ grid.getHorizonztalMargin() + grid.getFixedCellDimension();
@@ -230,7 +240,7 @@ public abstract class BasicGridUI extends GridUI {
 			}
 			indexInRow++;
 
-			if (debug) {
+			if (isDebugMode()) {
 				g.setColor(Color.red);
 				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
 						x + grid.getHorizonztalMargin(),
@@ -238,7 +248,7 @@ public abstract class BasicGridUI extends GridUI {
 				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
 						+ grid.getFixedCellDimension() / 2 + 5);
 			}
-			if (debug) {
+			if (isDebugMode()) {
 				g.setColor(Color.red);
 				g.drawLine(
 						x + grid.getHorizonztalMargin()
@@ -276,7 +286,7 @@ public abstract class BasicGridUI extends GridUI {
 			Rectangle r = new Rectangle(x, y, grid.getFixedCellDimension(),
 					grid.getFixedCellDimension());
 			x = x + grid.getHorizonztalMargin() + grid.getFixedCellDimension();
-			if (debug) {
+			if (isDebugMode()) {
 				g.setColor(Color.red);
 				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
 						x - grid.getHorizonztalMargin(),
@@ -295,9 +305,9 @@ public abstract class BasicGridUI extends GridUI {
 		rendererPane.removeAll();
 	}
 
-	protected abstract void paintCellBorder(Graphics g, JComponent c, int index,
-			Rectangle bounds, int leadIndex);
-	
+	protected abstract void paintCellBorder(Graphics g, JComponent c,
+			int index, Rectangle bounds, int leadIndex);
+
 	protected abstract void paintCellLabel(Graphics g, JComponent c, int index,
 			Rectangle bounds, int leadIndex);
 
@@ -315,7 +325,7 @@ public abstract class BasicGridUI extends GridUI {
 
 	@Override
 	public int getIndexAt(int row, int column) {
-		if(row < 0 || column < 0) {
+		if (row < 0 || column < 0) {
 			return -1;
 		}
 		int index = 0;
