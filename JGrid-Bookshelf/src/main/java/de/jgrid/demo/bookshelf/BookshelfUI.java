@@ -16,7 +16,6 @@ package de.jgrid.demo.bookshelf;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -33,9 +32,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import de.jgrid.demo.util.UrlLoader;
+import de.jgrid.ui.BasicGridUI;
 import de.jgrid.ui.MacOsGridUI;
 
-public class BookshelfUI extends MacOsGridUI {
+public class BookshelfUI extends BasicGridUI {
 
 	BufferedImage backgroundImage;
 	
@@ -106,25 +106,25 @@ public class BookshelfUI extends MacOsGridUI {
 		}
 	}
 	
-	protected void paintCell(Graphics g, JComponent c, int index,
-			Rectangle bounds, int leadIndex) {
-		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
-		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
-
-		Graphics2D g2 = (Graphics2D) g.create();
-		if (isDebugMode()) {
-			g2.setColor(Color.blue);
-			g2.fillRect(0, 0, bounds.width, bounds.height);
-		}
-		Object value = grid.getModel().getElementAt(index);
-
-		Component rendererComponent = grid.getCellRenderer(index)
-				.getGridCellRendererComponent(grid, value, index, isSelected,
-						cellHasFocus);
-		getRendererPane().add(rendererComponent);
-		getRendererPane().paintComponent(g2, rendererComponent, grid, bounds.x, bounds.y,
-				bounds.width, bounds.height, true);
-
-		g2.dispose();
-	}
+//	protected void paintCell(Graphics g, JComponent c, int index,
+//			Rectangle bounds, int leadIndex) {
+//		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
+//		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
+//
+//		Graphics2D g2 = (Graphics2D) g.create();
+//		if (isDebugMode()) {
+//			g2.setColor(Color.blue);
+//			g2.fillRect(0, 0, bounds.width, bounds.height);
+//		}
+//		Object value = grid.getModel().getElementAt(index);
+//
+//		Component rendererComponent = grid.getCellRenderer(index)
+//				.getGridCellRendererComponent(grid, value, index, isSelected,
+//						cellHasFocus);
+//		getRendererPane().add(rendererComponent);
+//		getRendererPane().paintComponent(g2, rendererComponent, grid, bounds.x, bounds.y,
+//				bounds.width, bounds.height, true);
+//
+//		g2.dispose();
+//	}
 }

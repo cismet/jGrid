@@ -15,11 +15,11 @@
 package de.jgrid.ui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -30,13 +30,12 @@ import java.util.Map.Entry;
 
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import de.jgrid.JGrid;
 
-public abstract class BasicGridUI extends GridUI {
+public class BasicGridUI extends GridUI {
 
 	protected JGrid grid;
 	private int columnCount = -1;
@@ -75,6 +74,8 @@ public abstract class BasicGridUI extends GridUI {
 					}
 				
 				}
+				//TODO: Wenn selection nicht sichtbar View anpassen
+				
 				// TODO: nur alte & neue Selektion repainten...
 				grid.repaint();
 			}
@@ -145,9 +146,9 @@ public abstract class BasicGridUI extends GridUI {
 		return "true".equals(System.getProperty("jgrid.debug", "false"));
 	}
 
-	protected CellRendererPane getRendererPane() {
-		return rendererPane;
-	}
+//	protected CellRendererPane getRendererPane() {
+//		return rendererPane;
+//	}
 
 	/**
 	 * Return the index or -1 if the index is not in the range of the ListModel
@@ -305,14 +306,38 @@ public abstract class BasicGridUI extends GridUI {
 		rendererPane.removeAll();
 	}
 
-	protected abstract void paintCellBorder(Graphics g, JComponent c,
-			int index, Rectangle bounds, int leadIndex);
+	protected void paintCellBorder(Graphics g, JComponent c,
+			int index, Rectangle bounds, int leadIndex) {
+		
+	}
 
-	protected abstract void paintCellLabel(Graphics g, JComponent c, int index,
-			Rectangle bounds, int leadIndex);
+	protected void paintCellLabel(Graphics g, JComponent c, int index,
+			Rectangle bounds, int leadIndex) {
+		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
+		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
 
-	protected abstract void paintCell(Graphics g, JComponent c, int index,
-			Rectangle bounds, int leadIndex);
+		Object value = grid.getModel().getElementAt(index);
+
+		Component rendererComponent = grid.getDefaultLabelRenderer()
+				.getGridLabelRendererComponent(grid, value, index, isSelected,
+						cellHasFocus);
+		rendererPane.paintComponent(g, rendererComponent, grid, 0, 0,
+				bounds.width, bounds.height, true);
+	}
+
+	protected void paintCell(Graphics g, JComponent c, int index,
+			Rectangle bounds, int leadIndex) {
+		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
+		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
+	
+		Object value = grid.getModel().getElementAt(index);
+
+		Component rendererComponent = grid.getCellRenderer(index)
+				.getGridCellRendererComponent(grid, value, index, isSelected,
+						cellHasFocus);
+		rendererPane.paintComponent(g, rendererComponent, grid, bounds.x, bounds.y,
+				bounds.width, bounds.height, true);
+	}
 
 	public Rectangle getCellBounds(int index) {
 		return cellBounds.get(new Integer(index));
