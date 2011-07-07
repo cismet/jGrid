@@ -33,7 +33,6 @@ import javax.swing.JComponent;
 
 import de.jgrid.demo.util.UrlLoader;
 import de.jgrid.ui.BasicGridUI;
-import de.jgrid.ui.MacOsGridUI;
 
 public class BookshelfUI extends BasicGridUI {
 
