@@ -33,10 +33,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import de.jgrid.demo.util.UrlLoader;
-import de.jgrid.ui.BasicGridUI;
-import de.jgrid.ui.GridUI;
+import de.jgrid.ui.MacOsGridUI;
 
-public class BookshelfUI extends BasicGridUI {
+public class BookshelfUI extends MacOsGridUI {
 
 	BufferedImage backgroundImage;
 	
@@ -113,7 +112,7 @@ public class BookshelfUI extends BasicGridUI {
 		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
 
 		Graphics2D g2 = (Graphics2D) g.create();
-		if (debug) {
+		if (isDebugMode()) {
 			g2.setColor(Color.blue);
 			g2.fillRect(0, 0, bounds.width, bounds.height);
 		}
@@ -122,8 +121,8 @@ public class BookshelfUI extends BasicGridUI {
 		Component rendererComponent = grid.getCellRenderer(index)
 				.getGridCellRendererComponent(grid, value, index, isSelected,
 						cellHasFocus);
-		rendererPane.add(rendererComponent);
-		rendererPane.paintComponent(g2, rendererComponent, grid, bounds.x, bounds.y,
+		getRendererPane().add(rendererComponent);
+		getRendererPane().paintComponent(g2, rendererComponent, grid, bounds.x, bounds.y,
 				bounds.width, bounds.height, true);
 
 		g2.dispose();
