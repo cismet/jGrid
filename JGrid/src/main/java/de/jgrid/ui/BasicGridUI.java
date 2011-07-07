@@ -146,10 +146,6 @@ public class BasicGridUI extends GridUI {
 		return "true".equals(System.getProperty("jgrid.debug", "false"));
 	}
 
-//	protected CellRendererPane getRendererPane() {
-//		return rendererPane;
-//	}
-
 	/**
 	 * Return the index or -1 if the index is not in the range of the ListModel
 	 * 
@@ -308,7 +304,7 @@ public class BasicGridUI extends GridUI {
 
 	protected void paintCellBorder(Graphics g, JComponent c,
 			int index, Rectangle bounds, int leadIndex) {
-		
+		//TODO: Paint default border
 	}
 
 	protected void paintCellLabel(Graphics g, JComponent c, int index,
