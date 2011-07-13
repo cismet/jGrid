@@ -33,15 +33,18 @@ import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionListener;
 
+import de.jgrid.eventproxies.ListDataProxy;
+import de.jgrid.eventproxies.ListSelectionProxy;
 import de.jgrid.renderer.GridCellRenderer;
 import de.jgrid.renderer.GridCellRendererManager;
 import de.jgrid.renderer.GridLabelRenderer;
-import de.jgrid.renderer.GridRendererManagerListener;
 import de.jgrid.sort.ListSorter;
 import de.jgrid.sort.ListSorterEvent;
 import de.jgrid.sort.ListSorterListener;
 import de.jgrid.ui.BasicGridUI;
+import de.jgrid.ui.GridUI;
 import de.jgrid.ui.MacOsGridUI;
 
 /**
@@ -52,7 +55,7 @@ import de.jgrid.ui.MacOsGridUI;
  * @version 0.1
  * @see JList
  */
-public class JGrid extends JComponent implements Scrollable, SwingConstants, ListDataListener, GridRendererManagerListener, ListSorterListener {
+public class JGrid extends JComponent implements Scrollable, SwingConstants, ListDataListener, ListSorterListener {
 
 	private static final long serialVersionUID = 1L;
 	private ListSelectionModel selectionModel;
@@ -69,6 +72,10 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	private Color cellBackground;
 	private int horizontalAlignment = CENTER;
 	private boolean labelsVisible = true;
+	
+	private ListSelectionProxy selectionProxy = new ListSelectionProxy();;
+	
+	private ListDataProxy dataProxy = new ListDataProxy();
 	
 	private ListSorter sorter;
 	
@@ -95,7 +102,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 		toolTipManager.registerComponent(this);
 
-		selectionModel = createDefaultSelectionModel();
+		setSelectionModel(createDefaultSelectionModel());
 		setModel(model);
 //		setSorter(new DefaultListSorter());
 		
@@ -104,6 +111,37 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		setCellRendererManager(new GridCellRendererManager());
 		updateUI();
 	}
+	
+
+	
+	/**
+	 * @param l
+	 * Auch wenn das SelectionModel geändert wird, werden alle über diesen Weg regiestrierten Listener beibehalten :)
+	 */
+	public void addListSelectionListener(ListSelectionListener l) {
+		selectionProxy.addListSelectionListener(l);
+	}
+	
+	public void removeListSelectionListener(ListSelectionListener l) {
+		selectionProxy.removeListSelectionListener(l);
+	}
+	
+	public void addListDataListener(ListDataListener l) {
+		dataProxy.addListDataListener(l);
+	}
+	
+	public void removeListDataListener(ListDataListener l) {
+		dataProxy.addListDataListener(l);
+	}
+	
+	public void setSelectionModel(ListSelectionModel selectionModel) {
+		if(this.selectionModel != null) {
+			this.selectionModel.removeListSelectionListener(selectionProxy);
+		}
+		this.selectionModel = selectionModel;
+		this.selectionModel.addListSelectionListener(selectionProxy);
+	}
+	
 	
 	public void setSorter(ListSorter sorter) {
 		
@@ -138,12 +176,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		}
 		
 		GridCellRendererManager oldManager = this.cellRendererManager;
-		if(oldManager != null) {
-			oldManager.removeGridRendererManagerListener(this);
-		}
 		
 		this.cellRendererManager = cellRendererManager;
-		this.cellRendererManager.removeGridRendererManagerListener(this);
 		cellRendererManager.updateRendererUI();
 		
 		firePropertyChange("cellRendererManager", oldManager, this.cellRendererManager);
@@ -161,13 +195,14 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
         }
         ListModel oldModel = this.model;
         if(oldModel != null) {
-        	oldModel.removeListDataListener(this);
+        	oldModel.removeListDataListener(dataProxy);
         	oldModel.removeListDataListener(getSorter());
         }
         this.model = model;
         this.model.addListDataListener(this);
         
         if(this.sorter != null) {
+        	this.model.addListDataListener(dataProxy);
         	this.model.addListDataListener(sorter);
             this.sorter.setModel(this.model);
         }
@@ -315,8 +350,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	 * @return the UIClass
 	 * @since 0.1
 	 */
-	public BasicGridUI getUI() {
-		return (BasicGridUI) ui;
+	public GridUI getUI() {
+		return (GridUI) ui;
 	}
 
 	public void updateUI() {
@@ -647,5 +682,17 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	@Override
 	public void sortingChanged(ListSorterEvent e) {
 		resizeAndRepaint();
+	}
+
+	public int getIndexAt(int row, int column) {
+		return getUI().getIndexAt(row, column);
+	}
+
+	public int getColumnForIndex(int index) {
+		return getUI().getColumnForIndex(index);
+	}
+
+	public int getRowForIndex(int index) {
+		return getUI().getRowForIndex(index);
 	}
 }

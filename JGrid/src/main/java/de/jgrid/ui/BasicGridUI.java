@@ -14,16 +14,11 @@
  */
 package de.jgrid.ui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +26,6 @@ import java.util.Map.Entry;
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import de.jgrid.JGrid;
 
@@ -41,8 +35,7 @@ public class BasicGridUI extends GridUI {
 	private int columnCount = -1;
 	private int rowCount = -1;
 	private Map<Integer, Rectangle> cellBounds;
-	private KeyAdapter keyInputHandler;
-	private MouseAdapter mouseInputHandler;
+	private BasicGridUIHandler handler;
 	private CellRendererPane rendererPane;
 
 	@Override
@@ -56,78 +49,21 @@ public class BasicGridUI extends GridUI {
 		rendererPane = new CellRendererPane();
 		grid.add(rendererPane);
 
-		mouseInputHandler = new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					int index = getCellAt(e.getPoint());
-					if (index >= 0) {
-						grid.requestFocus();
-					}
-					if(e.isControlDown()) {
-						//TODO: cmd on Mac
-						grid.getSelectionModel().addSelectionInterval(index, index);
-					} else if(e.isShiftDown()){
-						grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel().getLeadSelectionIndex(), index);
-					}else {
-						grid.setSelectedIndex(index);
-					}
-				
-				}
-				//TODO: Wenn selection nicht sichtbar View anpassen
-				
-				// TODO: nur alte & neue Selektion repainten...
-				grid.repaint();
-			}
-		};
-
-		keyInputHandler = new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-					int nextIndex = Math.max(0, grid.getSelectedIndex() - 1);
-					grid.setSelectedIndex(nextIndex);
-					// TODO: nur alte & neue Selektion repainten...
-					grid.repaint();
-				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-					int nextIndex = Math.min(grid.getModel().getSize(),
-							grid.getSelectedIndex() + 1);
-					grid.setSelectedIndex(nextIndex);
-					// TODO: nur alte & neue Selektion repainten...
-					grid.repaint();
-				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-					int selectedIndex = grid.getSelectedIndex();
-					int row = getRowForIndex(selectedIndex);
-					int column = getColumnForIndex(selectedIndex);
-
-					int nextIndex = Math.min(grid.getModel().getSize() - 1,
-							getIndexAt(row + 1, column));
-					grid.setSelectedIndex(nextIndex);
-					// TODO: nur alte & neue Selektion repainten...
-					grid.repaint();
-				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-					int selectedIndex = grid.getSelectedIndex();
-					int row = getRowForIndex(selectedIndex);
-					int column = getColumnForIndex(selectedIndex);
-					int nextIndex = Math.max(0, getIndexAt(row - 1, column));
-					grid.setSelectedIndex(nextIndex);
-					// TODO: nur alte & neue Selektion repainten...
-					grid.repaint();
-				}
-			}
-		};
-
-		grid.addMouseListener(mouseInputHandler);
-		grid.addKeyListener(keyInputHandler);
+		handler = new BasicGridUIHandler(grid);
+		grid.addMouseListener(handler);
+		grid.addKeyListener(handler);
+		grid.addListDataListener(handler);
+		grid.addListSelectionListener(handler);
 	}
 
 	public void uninstallUI(JComponent c) {
 		grid.remove(rendererPane);
-		grid.removeMouseListener(mouseInputHandler);
-		grid.removeKeyListener(keyInputHandler);
+		grid.removeMouseListener(handler);
+		grid.removeKeyListener(handler);
+		grid.removeListDataListener(handler);
+		grid.removeListSelectionListener(handler);
 		cellBounds.clear();
-		mouseInputHandler = null;
-		keyInputHandler = null;
+		handler = null;
 		rendererPane = null;
 		cellBounds = null;
 		grid = null;
@@ -193,15 +129,7 @@ public class BasicGridUI extends GridUI {
 		return new Dimension(width, getPreferredHeightForWidth(width));
 	}
 
-	@Override
-	public void paint(Graphics g, JComponent c) {
-		// TODO: Label mit einbauen
-		cellBounds.clear();
-		int x = 0;
-		int y = grid.getVerticalMargin() + grid.getInsets().top;
-		int row = 0;
-		int indexInRow = 0;
-
+	protected int calcStartX() {
 		// Damit Zentriert, wird Start-X abhängig von breite gesetzt
 		// TODO: grid.INSETS beachten!!!!!
 		int widthOneCell = grid.getHorizonztalMargin()
@@ -223,6 +151,17 @@ public class BasicGridUI extends GridUI {
 				startX = aktWidth;
 			}
 		}
+		return startX;
+	}
+	
+	@Override
+	public void updateCellBounds() {
+		cellBounds.clear();
+		int x = 0;
+		int y = grid.getVerticalMargin() + grid.getInsets().top;
+		int row = 0;
+		int indexInRow = 0;
+		int startX = calcStartX();
 		x = startX + grid.getInsets().left;
 		for (int i = 0; i < grid.getModel().getSize(); i++) {
 			if (x + grid.getHorizonztalMargin() + grid.getHorizonztalMargin()
@@ -237,74 +176,82 @@ public class BasicGridUI extends GridUI {
 			}
 			indexInRow++;
 
-			if (isDebugMode()) {
-				g.setColor(Color.red);
-				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
-						x + grid.getHorizonztalMargin(),
-						y + grid.getFixedCellDimension() / 2);
-				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
-						+ grid.getFixedCellDimension() / 2 + 5);
-			}
-			if (isDebugMode()) {
-				g.setColor(Color.red);
-				g.drawLine(
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2,
-						y,
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2,
-						y - grid.getVerticalMargin());
-				g.drawLine(
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2 - 5,
-						y - grid.getVerticalMargin(),
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2 + 5, y
-								- grid.getVerticalMargin());
-				g.drawLine(
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2,
-						y + grid.getFixedCellDimension(),
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2,
-						y + grid.getFixedCellDimension()
-								+ grid.getVerticalMargin());
-				g.drawLine(
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2 - 5,
-						y + grid.getFixedCellDimension()
-								+ grid.getVerticalMargin(),
-						x + grid.getHorizonztalMargin()
-								+ grid.getFixedCellDimension() / 2 + 5,
-						y + grid.getFixedCellDimension()
-								+ grid.getVerticalMargin());
-			}
 			x = x + grid.getHorizonztalMargin();
 			Rectangle r = new Rectangle(x, y, grid.getFixedCellDimension(),
 					grid.getFixedCellDimension());
 			x = x + grid.getHorizonztalMargin() + grid.getFixedCellDimension();
-			if (isDebugMode()) {
-				g.setColor(Color.red);
-				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
-						x - grid.getHorizonztalMargin(),
-						y + grid.getFixedCellDimension() / 2);
-				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
-						+ grid.getFixedCellDimension() / 2 + 5);
-			}
-			int leadIndex = adjustIndex(grid.getLeadSelectionIndex(), grid);
+			
 			cellBounds.put(new Integer(i), r);
-			if (grid.getVisibleRect().intersects(r)) {
-				paintCell(g, c, i, r, leadIndex);
-				paintCellBorder(g, c, i, r, leadIndex);
-			}
 		}
 		rowCount = row + 1;
+	}
+	
+	@Override
+	public void paint(Graphics g, JComponent c) {
+		// TODO: Label mit einbauen
+		updateCellBounds();
+			
+		for (int i = 0; i < grid.getModel().getSize(); i++) {
+			
+			if (isDebugMode()) {
+//				g.setColor(Color.red);
+//				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
+//						x + grid.getHorizonztalMargin(),
+//						y + grid.getFixedCellDimension() / 2);
+//				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
+//						+ grid.getFixedCellDimension() / 2 + 5);
+//
+//				g.setColor(Color.red);
+//				g.drawLine(
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2,
+//						y,
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2,
+//						y - grid.getVerticalMargin());
+//				g.drawLine(
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2 - 5,
+//						y - grid.getVerticalMargin(),
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2 + 5, y
+//								- grid.getVerticalMargin());
+//				g.drawLine(
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2,
+//						y + grid.getFixedCellDimension(),
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2,
+//						y + grid.getFixedCellDimension()
+//								+ grid.getVerticalMargin());
+//				g.drawLine(
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2 - 5,
+//						y + grid.getFixedCellDimension()
+//								+ grid.getVerticalMargin(),
+//						x + grid.getHorizonztalMargin()
+//								+ grid.getFixedCellDimension() / 2 + 5,
+//						y + grid.getFixedCellDimension()
+//								+ grid.getVerticalMargin());
+//			
+//				g.setColor(Color.red);
+//				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
+//						x - grid.getHorizonztalMargin(),
+//						y + grid.getFixedCellDimension() / 2);
+//				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
+//						+ grid.getFixedCellDimension() / 2 + 5);
+			}
+			int leadIndex = adjustIndex(grid.getLeadSelectionIndex(), grid);
+			if (grid.getVisibleRect().intersects(cellBounds.get(new Integer(i)))) {
+				paintCell(g, c, i, cellBounds.get(new Integer(i)), leadIndex);
+				paintCellBorder(g, c, i, cellBounds.get(new Integer(i)), leadIndex);
+			}
+		}
 		rendererPane.removeAll();
 	}
 
 	protected void paintCellBorder(Graphics g, JComponent c,
 			int index, Rectangle bounds, int leadIndex) {
-		//TODO: Paint default border
 	}
 
 	protected void paintCellLabel(Graphics g, JComponent c, int index,

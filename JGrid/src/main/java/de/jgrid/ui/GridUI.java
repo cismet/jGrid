@@ -34,5 +34,7 @@ public abstract class GridUI extends ComponentUI {
 	public abstract int getRowForIndex(int selectedIndex);
 	
 	public abstract int getColumnForIndex(int selectedIndex);
+	
+	public abstract void updateCellBounds();
 
 }
