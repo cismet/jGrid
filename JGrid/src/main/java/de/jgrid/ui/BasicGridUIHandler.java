@@ -1,5 +1,7 @@
 package de.jgrid.ui;
 
+import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -70,27 +72,59 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//ANCHOR ist der erste, LEAD ist der wo ich grade bin
+		
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			int nextIndex = Math.max(0, grid.getSelectedIndex() - 1);
-			grid.setSelectedIndex(nextIndex);
+			System.out.println("Anchestor: " + grid.getSelectionModel().getAnchorSelectionIndex());
+			System.out.println("Lead: " + grid.getSelectionModel().getAnchorSelectionIndex());
+			int nextIndex = Math.max(0, grid.getSelectionModel().getLeadSelectionIndex() - 1);
+			if(e.isShiftDown()) {
+				if(grid.getSelectionModel().isSelectedIndex(nextIndex)) {
+					grid.getSelectionModel().removeSelectionInterval(nextIndex, nextIndex);	
+				} else {
+				grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel()
+						.getLeadSelectionIndex(), nextIndex);
+				}
+			} else {
+				grid.setSelectedIndex(nextIndex);
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			int nextIndex = Math.min(grid.getModel().getSize(),
-					grid.getSelectedIndex() + 1);
-			grid.setSelectedIndex(nextIndex);
+					grid.getSelectionModel().getLeadSelectionIndex() + 1);
+			if(e.isShiftDown()) {
+				if(grid.getSelectionModel().isSelectedIndex(nextIndex)) {
+					grid.getSelectionModel().removeSelectionInterval(nextIndex, nextIndex);	
+				} else {
+				grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel()
+						.getLeadSelectionIndex(), nextIndex);
+				}
+			} else {
+				grid.setSelectedIndex(nextIndex);
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			int selectedIndex = grid.getSelectedIndex();
+			int selectedIndex = grid.getSelectionModel().getLeadSelectionIndex();
 			int row = grid.getRowForIndex(selectedIndex);
 			int column = grid.getColumnForIndex(selectedIndex);
 
 			int nextIndex = Math.min(grid.getModel().getSize() - 1,
 					grid.getIndexAt(row + 1, column));
-			grid.setSelectedIndex(nextIndex);
+			if(e.isShiftDown()) {
+				grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel()
+						.getLeadSelectionIndex(), nextIndex);
+			} else {
+				grid.setSelectedIndex(nextIndex);
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-			int selectedIndex = grid.getSelectedIndex();
+			int selectedIndex = grid.getSelectionModel().getLeadSelectionIndex();
 			int row = grid.getRowForIndex(selectedIndex);
 			int column = grid.getColumnForIndex(selectedIndex);
 			int nextIndex = Math.max(0, grid.getIndexAt(row - 1, column));
-			grid.setSelectedIndex(nextIndex);
+			if(e.isShiftDown()) {
+				grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel()
+						.getLeadSelectionIndex(), nextIndex);
+			} else {
+				grid.setSelectedIndex(nextIndex);
+			}
 		}
 	}
 
@@ -101,9 +135,13 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 			if (index >= 0) {
 				grid.requestFocus();
 			}
-			if (e.isControlDown()) {
-				// TODO: cmd on Mac
-				grid.getSelectionModel().addSelectionInterval(index, index);
+			if (isMenuShortcutKeyDown(e)) {
+				if(grid.getSelectionModel().isSelectedIndex(index)) {
+					grid.getSelectionModel().removeSelectionInterval(index, index);
+					
+				} else {
+					grid.getSelectionModel().addSelectionInterval(index, index);
+				}
 			} else if (e.isShiftDown()) {
 				grid.getSelectionModel()
 						.addSelectionInterval(
@@ -151,4 +189,8 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		grid.getUI().updateCellBounds();
 	}
 
+	public boolean isMenuShortcutKeyDown(InputEvent event) {
+        return (event.getModifiers() & 
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
+    }
 }

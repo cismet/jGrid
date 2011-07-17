@@ -56,6 +56,7 @@ public class BasicGridUI extends GridUI {
 		grid.addListSelectionListener(handler);
 	}
 
+	@Override
 	public void uninstallUI(JComponent c) {
 		grid.remove(rendererPane);
 		grid.removeMouseListener(handler);
@@ -69,6 +70,7 @@ public class BasicGridUI extends GridUI {
 		grid = null;
 	}
 
+	@Override
 	public int getCellAt(Point point) {
 		for (Entry<Integer, Rectangle> entry : cellBounds.entrySet()) {
 			if (entry.getValue().contains(point)) {
@@ -129,7 +131,7 @@ public class BasicGridUI extends GridUI {
 		return new Dimension(width, getPreferredHeightForWidth(width));
 	}
 
-	protected int calcStartX() {
+	private int calcStartX() {
 		// Damit Zentriert, wird Start-X abhängig von breite gesetzt
 		// TODO: grid.INSETS beachten!!!!!
 		int widthOneCell = grid.getHorizonztalMargin()
@@ -192,55 +194,6 @@ public class BasicGridUI extends GridUI {
 		updateCellBounds();
 			
 		for (int i = 0; i < grid.getModel().getSize(); i++) {
-			
-			if (isDebugMode()) {
-//				g.setColor(Color.red);
-//				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
-//						x + grid.getHorizonztalMargin(),
-//						y + grid.getFixedCellDimension() / 2);
-//				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
-//						+ grid.getFixedCellDimension() / 2 + 5);
-//
-//				g.setColor(Color.red);
-//				g.drawLine(
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2,
-//						y,
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2,
-//						y - grid.getVerticalMargin());
-//				g.drawLine(
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2 - 5,
-//						y - grid.getVerticalMargin(),
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2 + 5, y
-//								- grid.getVerticalMargin());
-//				g.drawLine(
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2,
-//						y + grid.getFixedCellDimension(),
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2,
-//						y + grid.getFixedCellDimension()
-//								+ grid.getVerticalMargin());
-//				g.drawLine(
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2 - 5,
-//						y + grid.getFixedCellDimension()
-//								+ grid.getVerticalMargin(),
-//						x + grid.getHorizonztalMargin()
-//								+ grid.getFixedCellDimension() / 2 + 5,
-//						y + grid.getFixedCellDimension()
-//								+ grid.getVerticalMargin());
-//			
-//				g.setColor(Color.red);
-//				g.drawLine(x, y + grid.getFixedCellDimension() / 2,
-//						x - grid.getHorizonztalMargin(),
-//						y + grid.getFixedCellDimension() / 2);
-//				g.drawLine(x, y + grid.getFixedCellDimension() / 2 - 5, x, y
-//						+ grid.getFixedCellDimension() / 2 + 5);
-			}
 			int leadIndex = adjustIndex(grid.getLeadSelectionIndex(), grid);
 			if (grid.getVisibleRect().intersects(cellBounds.get(new Integer(i)))) {
 				paintCell(g, c, i, cellBounds.get(new Integer(i)), leadIndex);
@@ -268,6 +221,7 @@ public class BasicGridUI extends GridUI {
 				bounds.width, bounds.height, true);
 	}
 
+	@Override
 	public Rectangle getCellBounds(int index) {
 		return cellBounds.get(new Integer(index));
 	}
