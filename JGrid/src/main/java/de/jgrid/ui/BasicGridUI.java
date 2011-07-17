@@ -254,20 +254,6 @@ public class BasicGridUI extends GridUI {
 			int index, Rectangle bounds, int leadIndex) {
 	}
 
-	protected void paintCellLabel(Graphics g, JComponent c, int index,
-			Rectangle bounds, int leadIndex) {
-		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
-		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
-
-		Object value = grid.getModel().getElementAt(index);
-
-		Component rendererComponent = grid.getDefaultLabelRenderer()
-				.getGridLabelRendererComponent(grid, value, index, isSelected,
-						cellHasFocus);
-		rendererPane.paintComponent(g, rendererComponent, grid, 0, 0,
-				bounds.width, bounds.height, true);
-	}
-
 	protected void paintCell(Graphics g, JComponent c, int index,
 			Rectangle bounds, int leadIndex) {
 		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);

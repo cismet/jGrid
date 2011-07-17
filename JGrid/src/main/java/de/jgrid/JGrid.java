@@ -31,7 +31,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
-import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionListener;
 
@@ -39,10 +38,6 @@ import de.jgrid.eventproxies.ListDataProxy;
 import de.jgrid.eventproxies.ListSelectionProxy;
 import de.jgrid.renderer.GridCellRenderer;
 import de.jgrid.renderer.GridCellRendererManager;
-import de.jgrid.renderer.GridLabelRenderer;
-import de.jgrid.sort.ListSorter;
-import de.jgrid.sort.ListSorterEvent;
-import de.jgrid.sort.ListSorterListener;
 import de.jgrid.ui.BasicGridUI;
 import de.jgrid.ui.GridUI;
 import de.jgrid.ui.MacOsGridUI;
@@ -55,15 +50,13 @@ import de.jgrid.ui.MacOsGridUI;
  * @version 0.1
  * @see JList
  */
-public class JGrid extends JComponent implements Scrollable, SwingConstants, ListDataListener, ListSorterListener {
+public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	private static final long serialVersionUID = 1L;
 	private ListSelectionModel selectionModel;
 	private ListModel model;
 	private GridCellRendererManager cellRendererManager;
-	private GridLabelRenderer defaultLabelRenderer;
 	private int fixedCellDimension = 128;
-	private int cellLabelCap = 16;
 	private int horizonztalMargin = 16;
 	private int verticalMargin = 16;
 	private Color selectionForeground;
@@ -71,16 +64,18 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	private Color selectionBackground;
 	private Color cellBackground;
 	private int horizontalAlignment = CENTER;
-	private boolean labelsVisible = true;
-	
 	private ListSelectionProxy selectionProxy = new ListSelectionProxy();;
-	
 	private ListDataProxy dataProxy = new ListDataProxy();
-	
-	private ListSorter sorter;
-	
+
 	private static final String uiClassID = "GridUI";
 
+	/**
+     * Constructs a {@code JGrid} with a DefaultListModel.
+     *
+     * @param model the model for the grid
+     * @exception IllegalArgumentException if the model is {@code null}
+     * @since 0.1
+     */
 	public JGrid() {
 		this(new DefaultListModel());
 	}
@@ -94,7 +89,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
      * @exception IllegalArgumentException if the model is {@code null}
      * @since 0.1
      */
-	public JGrid(ListModel model) {
+	public JGrid(ListModel model) throws IllegalArgumentException {
 		if (model == null) {
 			throw new IllegalArgumentException("dataModel must be non null");
 		}
@@ -104,15 +99,11 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 
 		setSelectionModel(createDefaultSelectionModel());
 		setModel(model);
-//		setSorter(new DefaultListSorter());
-		
 		setAutoscrolls(true);
 		setOpaque(true);
 		setCellRendererManager(new GridCellRendererManager());
 		updateUI();
 	}
-	
-
 	
 	/**
 	 * @param l
@@ -142,35 +133,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		this.selectionModel.addListSelectionListener(selectionProxy);
 	}
 	
-	
-	public void setSorter(ListSorter sorter) {
-		
-		ListSorter oldSorter = this.sorter;
-		
-		if(oldSorter != null) {
-			oldSorter.removeListSorterListener(this);
-			getModel().removeListDataListener(oldSorter);
-			oldSorter.setModel(null);
-		}
-		
-		this.sorter = sorter;
-		if(this.sorter != null) {
-			this.sorter.addListSorterListener(this);
-			this.sorter.setModel(model);
-			getModel().addListDataListener(this.sorter);
-		}
-		
-		firePropertyChange("sorter", oldSorter, this.sorter);
-		
-		resizeAndRepaint();
-	}
-	
-	public ListSorter getSorter() {
-		return sorter;
-	}
-	
 	public void setCellRendererManager(
-			GridCellRendererManager cellRendererManager) {
+			GridCellRendererManager cellRendererManager) throws IllegalArgumentException{
 		if(cellRendererManager == null) {
 			throw new IllegalArgumentException("cellRendererManager must be non null");
 		}
@@ -189,48 +153,21 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		return cellRendererManager;
 	}
 	
-    public void setModel(ListModel model) {
+    public void setModel(ListModel model) throws IllegalArgumentException{
         if (model == null) {
             throw new IllegalArgumentException("model must be non null");
         }
         ListModel oldModel = this.model;
         if(oldModel != null) {
         	oldModel.removeListDataListener(dataProxy);
-        	oldModel.removeListDataListener(getSorter());
         }
         this.model = model;
-        this.model.addListDataListener(this);
-        
-        if(this.sorter != null) {
-        	this.model.addListDataListener(dataProxy);
-        	this.model.addListDataListener(sorter);
-            this.sorter.setModel(this.model);
-        }
+        this.model.addListDataListener(dataProxy);
+    
         firePropertyChange("model", oldModel, this.model);
         selectionModel.clearSelection();
     }
 
-	public int getViewCellCount() {
-		if(getSorter() != null) {
-			return getSorter().getViewCellCount();
-		}
-		return getModel().getSize();
-	}
-	
-	public int convertCellIndexToModel(int index) {
-		if(getSorter() != null) {
-			return getSorter().convertCellIndexToModel(index);
-		}
-		return index;
-	}
-	
-	public int convertCellIndexToView(int index) {
-		if(getSorter() != null) {
-			return getSorter().convertCellIndexToView(index);
-		}
-		return index;
-	}
-    
     protected void resizeAndRepaint() {
         revalidate();
         repaint();
@@ -249,61 +186,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	}
 
 	/**
-     * Returns the default GridLabelRenderer
-     *
-     * @return GridLabelRenderer of this grid
-     * @since 0.1
-     */
-	public GridLabelRenderer getDefaultLabelRenderer() {
-		return defaultLabelRenderer;
-	}
-
-	/**
-	 * Sets the GridLabelRenderer for this Component.
-	 * Fires <code>PropertyChangeEvent</code> with the <code>defaultLabelRenderer</code> propertyname
-	 * @param defaultLabelRenderer the new LabelRenderer for this Grid
-	 * @since 0.1
-	 * 
-	 */
-	public void setDefaultLabelRenderer(GridLabelRenderer defaultLabelRenderer) {
-		GridLabelRenderer oldValue = this.defaultLabelRenderer;
-		this.defaultLabelRenderer = defaultLabelRenderer;
-		firePropertyChange("defaultLabelRenderer", oldValue,
-				this.defaultLabelRenderer);
-	}
-
-	/**
-	 * Getter for the cellLabelCap
-	 * @return cellLabelCap
-	 * @since 0.1
-	 */
-	public int getCellLabelCap() {
-		return cellLabelCap;
-	}
-
-	/**
-     * Returns {@code true} if the cells in the JGrid are labeled, else {@code false}
-     *
-     * @return {@code true} if the cells in the JGrid are labeled, else {@code false}
-     * @since 0.1
-     */
-	public boolean isLabelsVisible() {
-		return labelsVisible;
-	}
-	
-	/**
-	 * Sets the labelsVisible-Property for this Component. If true the grid renders Labels for all Elements. (Actually not working)
-	 * Fires <code>PropertyChangeEvent</code> with the <code>labelsVisible</code> propertyname
-	 * @param labelsVisible the labelsVisible-flag for this Grid
-	 * @since 0.1
-	 */
-	public void setLabelsVisible(boolean labelsVisible) {
-		boolean oldValue = this.labelsVisible;
-		this.labelsVisible = labelsVisible;
-		firePropertyChange("labelsVisible", oldValue, this.labelsVisible);
-	}
-
-	/**
 	 * Return the Model of the JGrid
 	 * @return The Model of the JGrid
 	 * @since 0.1
@@ -312,8 +194,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 	public ListModel getModel() {
 		return model;
 	}
-
-	
 
 	/**
 	 * Returns the ListSelectionModel
@@ -372,7 +252,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		revalidate();
 		repaint();
 	}
-
 
 	/**
 	 * Sets the vertical margin between all elements in the grid.
@@ -576,7 +455,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		getSelectionModel().setSelectionInterval(index, index);
 	}
 
-
 	/**
 	 * Returns the bounds inside the grid for the cell at index
 	 * @param index the index of the cell
@@ -662,26 +540,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants, Lis
 		} else {
 			throw new IllegalArgumentException("Illegal HorizontalAlignment: " + alignment);
 		}
-	}
-
-	@Override
-	public void contentsChanged(ListDataEvent e) {
-		resizeAndRepaint();
-	}
-
-	@Override
-	public void intervalAdded(ListDataEvent e) {
-		resizeAndRepaint();
-	}
-
-	@Override
-	public void intervalRemoved(ListDataEvent e) {
-		resizeAndRepaint();
-	}
-
-	@Override
-	public void sortingChanged(ListSorterEvent e) {
-		resizeAndRepaint();
 	}
 
 	public int getIndexAt(int row, int column) {
