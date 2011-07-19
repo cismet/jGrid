@@ -57,6 +57,7 @@ public class BasicGridUI extends GridUI {
 		grid.addKeyListener(handler);
 		grid.addListDataListener(handler);
 		grid.addListSelectionListener(handler);
+		grid.addPropertyChangeListener(handler);
 	}
 
 	@Override
@@ -67,6 +68,7 @@ public class BasicGridUI extends GridUI {
 		grid.removeKeyListener(handler);
 		grid.removeListDataListener(handler);
 		grid.removeListSelectionListener(handler);
+		grid.removePropertyChangeListener(handler);
 		cellBounds.clear();
 		handler = null;
 		rendererPane = null;

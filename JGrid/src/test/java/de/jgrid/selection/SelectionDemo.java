@@ -12,6 +12,8 @@ import de.jgrid.JGrid;
 
 public class SelectionDemo extends JFrame {
 
+	private static final long serialVersionUID = 1L;
+
 	public SelectionDemo() {
 		setTitle("SelectionDemo");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
