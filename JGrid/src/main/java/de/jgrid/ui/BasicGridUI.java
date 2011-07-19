@@ -37,7 +37,8 @@ public class BasicGridUI extends GridUI {
 	private Map<Integer, Rectangle> cellBounds;
 	private BasicGridUIHandler handler;
 	private CellRendererPane rendererPane;
-
+	private boolean dirtyCellBounds;
+	
 	@Override
 	public void installUI(JComponent c) {
 		super.installUI(c);
@@ -45,12 +46,14 @@ public class BasicGridUI extends GridUI {
 			grid = (JGrid) c;
 		}
 		cellBounds = new HashMap<Integer, Rectangle>();
+		dirtyCellBounds = true;
 
 		rendererPane = new CellRendererPane();
 		grid.add(rendererPane);
 
 		handler = new BasicGridUIHandler(grid);
 		grid.addMouseListener(handler);
+		grid.addComponentListener(handler);
 		grid.addKeyListener(handler);
 		grid.addListDataListener(handler);
 		grid.addListSelectionListener(handler);
@@ -60,6 +63,7 @@ public class BasicGridUI extends GridUI {
 	public void uninstallUI(JComponent c) {
 		grid.remove(rendererPane);
 		grid.removeMouseListener(handler);
+		grid.removeComponentListener(handler);
 		grid.removeKeyListener(handler);
 		grid.removeListDataListener(handler);
 		grid.removeListSelectionListener(handler);
@@ -72,6 +76,7 @@ public class BasicGridUI extends GridUI {
 
 	@Override
 	public int getCellAt(Point point) {
+		maybeUpdateCellBounds();
 		for (Entry<Integer, Rectangle> entry : cellBounds.entrySet()) {
 			if (entry.getValue().contains(point)) {
 				return entry.getKey().intValue();
@@ -128,7 +133,7 @@ public class BasicGridUI extends GridUI {
 			width = grid.getInsets().left + width + grid.getInsets().right;
 			height = grid.getInsets().top + height + grid.getInsets().bottom;
 		}
-		return new Dimension(width, getPreferredHeightForWidth(width));
+		return new Dimension(width, height);
 	}
 
 	private int calcStartX() {
@@ -156,8 +161,14 @@ public class BasicGridUI extends GridUI {
 		return startX;
 	}
 	
-	@Override
-	public void updateCellBounds() {
+	private void maybeUpdateCellBounds() {
+		if(dirtyCellBounds) {
+			updateCellBounds();
+			dirtyCellBounds = false;
+		}
+	}
+	
+	private void updateCellBounds() {
 		cellBounds.clear();
 		int x = 0;
 		int y = grid.getVerticalMargin() + grid.getInsets().top;
@@ -186,12 +197,13 @@ public class BasicGridUI extends GridUI {
 			cellBounds.put(new Integer(i), r);
 		}
 		rowCount = row + 1;
+		dirtyCellBounds = false;
 	}
 	
 	@Override
 	public void paint(Graphics g, JComponent c) {
 		// TODO: Label mit einbauen
-		updateCellBounds();
+		maybeUpdateCellBounds();
 			
 		for (int i = 0; i < grid.getModel().getSize(); i++) {
 			int leadIndex = adjustIndex(grid.getLeadSelectionIndex(), grid);
@@ -223,11 +235,13 @@ public class BasicGridUI extends GridUI {
 
 	@Override
 	public Rectangle getCellBounds(int index) {
+		maybeUpdateCellBounds();
 		return cellBounds.get(new Integer(index));
 	}
 
 	@Override
 	public int getColumnCount() {
+		maybeUpdateCellBounds();
 		return columnCount;
 	}
 
@@ -245,11 +259,13 @@ public class BasicGridUI extends GridUI {
 
 	@Override
 	public int getRowCount() {
+		maybeUpdateCellBounds();
 		return rowCount;
 	}
 
 	@Override
 	public int getRowForIndex(int selectedIndex) {
+		maybeUpdateCellBounds();
 		return selectedIndex / columnCount;
 	}
 
@@ -262,5 +278,10 @@ public class BasicGridUI extends GridUI {
 		int prev = (row * getColumnCount());
 		int index = selectedIndex - prev;
 		return index;
+	}
+
+	@Override
+	public void markCellBoundsAsDirty() {
+		dirtyCellBounds = true;
 	}
 }

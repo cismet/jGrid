@@ -14,6 +14,7 @@ public class SelectionDemoRenderer extends JLabel implements GridCellRenderer {
 	public SelectionDemoRenderer() {
 		setHorizontalTextPosition(CENTER);
 		setVerticalTextPosition(CENTER);
+		setHorizontalAlignment(CENTER);
 	}
 	
 	@Override
