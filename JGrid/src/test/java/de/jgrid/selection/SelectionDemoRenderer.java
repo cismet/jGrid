@@ -2,21 +2,13 @@ package de.jgrid.selection;
 
 import java.awt.Component;
 
-import javax.swing.JLabel;
-
 import de.jgrid.JGrid;
-import de.jgrid.renderer.GridCellRenderer;
+import de.jgrid.renderer.DefaultGridCellRenderer;
 
-public class SelectionDemoRenderer extends JLabel implements GridCellRenderer {
+public class SelectionDemoRenderer extends DefaultGridCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 
-	public SelectionDemoRenderer() {
-		setHorizontalTextPosition(CENTER);
-		setVerticalTextPosition(CENTER);
-		setHorizontalAlignment(CENTER);
-	}
-	
 	@Override
 	public Component getGridCellRendererComponent(JGrid grid, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {

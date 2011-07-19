@@ -77,6 +77,10 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
 		int lead = grid.getSelectionModel().getLeadSelectionIndex();
 		
+		if (e.getKeyCode() == KeyEvent.VK_A && isMenuShortcutKeyDown(e)) {
+			grid.getSelectionModel().addSelectionInterval(0, grid.getModel().getSize() - 1);
+		}
+		
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
 			if(e.isShiftDown()) {
