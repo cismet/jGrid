@@ -43,7 +43,9 @@ import de.jgrid.ui.GridUI;
 import de.jgrid.ui.MacOsGridUI;
 
 /**
- * A Component that displays a list of Elements in a grid. The Elements stored is  a separate model, {@code ListModel}. So you can use a {@code JList} parallel to to the JGrid
+ * A Component that displays a list of Elements in a grid. The Elements stored
+ * is a separate model, {@code ListModel}. So you can use a {@code JList}
+ * parallel to to the JGrid
  * 
  * @author Hendrik Ebbers
  * @since 0.1
@@ -70,25 +72,29 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	private static final String uiClassID = "GridUI";
 
 	/**
-     * Constructs a {@code JGrid} with a DefaultListModel.
-     *
-     * @param model the model for the grid
-     * @exception IllegalArgumentException if the model is {@code null}
-     * @since 0.1
-     */
+	 * Constructs a {@code JGrid} with a DefaultListModel.
+	 * 
+	 * @param model
+	 *            the model for the grid
+	 * @exception IllegalArgumentException
+	 *                if the model is {@code null}
+	 * @since 0.1
+	 */
 	public JGrid() {
 		this(new DefaultListModel());
 	}
-	
+
 	/**
-     * Constructs a {@code JGrid} that displays elements from the specified,
-     * {@code non-null}, model. All {@code JGrid} constructors must delegate to
-     * this one.
-     *
-     * @param model the model for the grid
-     * @exception IllegalArgumentException if the model is {@code null}
-     * @since 0.1
-     */
+	 * Constructs a {@code JGrid} that displays elements from the specified,
+	 * {@code non-null}, model. All {@code JGrid} constructors must delegate to
+	 * this one.
+	 * 
+	 * @param model
+	 *            the model for the grid
+	 * @exception IllegalArgumentException
+	 *                if the model is {@code null}
+	 * @since 0.1
+	 */
 	public JGrid(ListModel model) throws IllegalArgumentException {
 		if (model == null) {
 			throw new IllegalArgumentException("dataModel must be non null");
@@ -105,92 +111,165 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		setUI(new MacOsGridUI());
 		updateUI();
 	}
-	
+
 	/**
-	 * @param l
-	 * Auch wenn das SelectionModel geändert wird, werden alle über diesen Weg regiestrierten Listener beibehalten :)
+	 * Adds a listener to the JGrid, to be notified each time a change to the
+	 * selection occurs. This Method uses a {@code ListSelectionProxy}. Every
+	 * time the underlying {@code ListSelectionModel} changes all listeners will
+	 * be registered to the new model and deregistered from the old one. For
+	 * adding listeneres to the model-scope (direct to the model) use
+	 * ListSelectionListener.addListSelectionListener
+	 * 
+	 * @param listener
+	 *            the {@code ListSelectionListener} to add
+	 * @see #removeListSelectionListener
 	 */
 	public void addListSelectionListener(ListSelectionListener l) {
 		selectionProxy.addListSelectionListener(l);
 	}
-	
+
+	/**
+	 * Removes a listener from the JGrid.
+	 * 
+	 * @param listener
+	 *            the {@code ListSelectionListener} to remove
+	 * @see #addListSelectionListener
+	 */
 	public void removeListSelectionListener(ListSelectionListener l) {
 		selectionProxy.removeListSelectionListener(l);
 	}
-	
+
+	/**
+	 * Adds a listener to the JGrid, to be notified each time a change to the
+	 * data occurs. This Method uses a {@code ListDataProxy}. Every
+	 * time the underlying {@code ListModel} changes all listeners will
+	 * be registered to the new model and deregistered from the old one. For
+	 * adding listeneres to the model-scope (direct to the model) use
+	 * ListModel.addListDataListener
+	 * 
+	 * @param listener
+	 *            the {@code ListSelectionListener} to add
+	 * @see #removeListDataListener
+	 */
 	public void addListDataListener(ListDataListener l) {
 		dataProxy.addListDataListener(l);
 	}
-	
+
+	/**
+	 * Removes a listener from the JGrid.
+	 * 
+	 * @param listener
+	 *            the {@code ListDataListener} to remove
+	 * @see #addListDataListener
+	 */
 	public void removeListDataListener(ListDataListener l) {
 		dataProxy.addListDataListener(l);
 	}
-	
+
+	/**
+     * Sets the {@code ListSelectionModel} of the JGrid
+     * @param selectionModel the new {@code ListSelectionModel}
+     * @throws IllegalArgumentException if the model is null
+     * @see #getSelectionModel()
+     * 
+     */
 	public void setSelectionModel(ListSelectionModel selectionModel) {
-		if(this.selectionModel != null) {
+		if (selectionModel == null) {
+			throw new IllegalArgumentException(
+					"selectionModel must be non null");
+		}
+		if (this.selectionModel != null) {
 			this.selectionModel.removeListSelectionListener(selectionProxy);
 		}
 		this.selectionModel = selectionModel;
 		this.selectionModel.addListSelectionListener(selectionProxy);
 	}
-	
+
+	/**
+     * Sets the {@code GridCellRendererManager} of the JGrid
+     * @param cellRendererManager the new {@code GridCellRendererManager}
+     * @throws IllegalArgumentException if the cellRendererManager is null
+     * @since 0.3
+	 * @see GridCellRendererManager
+     * @see #getCellRendererManager()
+     * 
+     */
 	public void setCellRendererManager(
-			GridCellRendererManager cellRendererManager) throws IllegalArgumentException{
-		if(cellRendererManager == null) {
-			throw new IllegalArgumentException("cellRendererManager must be non null");
+			GridCellRendererManager cellRendererManager)
+			throws IllegalArgumentException {
+		if (cellRendererManager == null) {
+			throw new IllegalArgumentException(
+					"cellRendererManager must be non null");
 		}
-		
+
 		GridCellRendererManager oldManager = this.cellRendererManager;
-		
+
 		this.cellRendererManager = cellRendererManager;
 		cellRendererManager.updateRendererUI();
-		
-		firePropertyChange("cellRendererManager", oldManager, this.cellRendererManager);
-		
+
+		firePropertyChange("cellRendererManager", oldManager,
+				this.cellRendererManager);
+
 		revalidateAndRepaint();
 	}
-	
+
+	/**
+	 * Return the {@code GridCellRendererManager} of the JGrid
+	 * 
+	 * @return The {@code GridCellRendererManager} of the JGrid
+	 * @since 0.3
+	 * @see GridCellRendererManager
+	 */
 	public GridCellRendererManager getCellRendererManager() {
 		return cellRendererManager;
 	}
-	
-    public void setModel(ListModel model) throws IllegalArgumentException{
-        if (model == null) {
-            throw new IllegalArgumentException("model must be non null");
-        }
-        ListModel oldModel = this.model;
-        if(oldModel != null) {
-        	oldModel.removeListDataListener(dataProxy);
-        }
-        this.model = model;
-        this.model.addListDataListener(dataProxy);
-    
-        firePropertyChange("model", oldModel, this.model);
-        selectionModel.clearSelection();
-    }
 
-    /**
-     * Calls revalidate() and repaint()
+	/**
+     * Sets the model that represents values of the JGrid
+     * @param model the new {@code ListModel}
+     * @throws IllegalArgumentException if the model is null
+     * @see #getModel
+     * 
      */
-    protected void revalidateAndRepaint() {
-        revalidate();
-        repaint();
-    }
-	
-	 /**
-     * Returns an default instance of {@code ListSelectionModel}; called
-     * during construction to initialize the grids selectionModel. Normally this returns a {@code DefaultListSelectionModel}
-     *
-     * @return a default ListSelectionModel
-     * @since 0.1
-     * @see JList
-     */
+	public void setModel(ListModel model) throws IllegalArgumentException {
+		if (model == null) {
+			throw new IllegalArgumentException("model must be non null");
+		}
+		ListModel oldModel = this.model;
+		if (oldModel != null) {
+			oldModel.removeListDataListener(dataProxy);
+		}
+		this.model = model;
+		this.model.addListDataListener(dataProxy);
+
+		firePropertyChange("model", oldModel, this.model);
+		selectionModel.clearSelection();
+	}
+
+	/**
+	 * Calls revalidate() and repaint()
+	 */
+	protected void revalidateAndRepaint() {
+		revalidate();
+		repaint();
+	}
+
+	/**
+	 * Returns an default instance of {@code ListSelectionModel}; called during
+	 * construction to initialize the grids selectionModel. Normally this
+	 * returns a {@code DefaultListSelectionModel}
+	 * 
+	 * @return a default ListSelectionModel
+	 * @since 0.1
+	 * @see JList
+	 */
 	protected ListSelectionModel createDefaultSelectionModel() {
 		return new DefaultListSelectionModel();
 	}
 
 	/**
 	 * Return the Model of the JGrid
+	 * 
 	 * @return The Model of the JGrid
 	 * @since 0.1
 	 * @see JList
@@ -201,6 +280,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	/**
 	 * Returns the ListSelectionModel
+	 * 
 	 * @return the ListSelectionModel
 	 * @since 0.1
 	 * @see JList
@@ -211,16 +291,18 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	/**
 	 * Returns the selected Index from the ListSelectionModel
+	 * 
 	 * @return the selected Index
 	 * @see ListSelectionModel
 	 * @since 0.1
 	 */
 	public int getSelectedIndex() {
-		return  getSelectionModel().getMinSelectionIndex();
+		return getSelectionModel().getMinSelectionIndex();
 	}
 
 	/**
 	 * Returns the leadSelectionIndex from the ListSelectionModel
+	 * 
 	 * @return the leadSelectionIndex
 	 * @see ListSelectionModel
 	 * @since 0.1
@@ -231,6 +313,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	/**
 	 * Returns the UI-Class for this JComponent. This is always a GridUI
+	 * 
 	 * @return the UIClass
 	 * @since 0.1
 	 */
@@ -243,9 +326,13 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Sets the rendering dimension for all elements in the grid. The width and height of each element is equals the dimenison.
-	 * Fires <code>PropertyChangeEvent</code> with the <code>fixedCellDimension</code> propertyname
-	 * @param dimension the new dimension for this Grid
+	 * Sets the rendering dimension for all elements in the grid. The width and
+	 * height of each element is equals the dimenison. Fires
+	 * <code>PropertyChangeEvent</code> with the <code>fixedCellDimension</code>
+	 * propertyname
+	 * 
+	 * @param dimension
+	 *            the new dimension for this Grid
 	 * @since 0.1
 	 */
 	public void setFixedCellDimension(int dimension) {
@@ -257,9 +344,12 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Sets the vertical margin between all elements in the grid.
-	 * Fires <code>PropertyChangeEvent</code> with the <code>verticalMargin</code> propertyname
-	 * @param verticalMargin the vertical margin for this Grid
+	 * Sets the vertical margin between all elements in the grid. Fires
+	 * <code>PropertyChangeEvent</code> with the <code>verticalMargin</code>
+	 * propertyname
+	 * 
+	 * @param verticalMargin
+	 *            the vertical margin for this Grid
 	 * @since 0.1
 	 */
 	public void setVerticalMargin(int verticalMargin) {
@@ -271,9 +361,12 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Sets the horizonztal margin between all elements in the grid.
-	 * Fires <code>PropertyChangeEvent</code> with the <code>horizonztalMargin</code> propertyname
-	 * @param horizonztalMargin the horizonztal margin for this Grid
+	 * Sets the horizonztal margin between all elements in the grid. Fires
+	 * <code>PropertyChangeEvent</code> with the <code>horizonztalMargin</code>
+	 * propertyname
+	 * 
+	 * @param horizonztalMargin
+	 *            the horizonztal margin for this Grid
 	 * @since 0.1
 	 */
 	public void setHorizonztalMargin(int horizonztalMargin) {
@@ -285,7 +378,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Returns the Dimension of a cell. Each cell in the Grid has a width and height equals the fixedCellDimension
+	 * Returns the Dimension of a cell. Each cell in the Grid has a width and
+	 * height equals the fixedCellDimension
+	 * 
 	 * @return the fixedCellDimension
 	 * @since 0.1
 	 */
@@ -294,7 +389,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Returns the horizonztalMargin. The horizonztalMargin is the horizontal space between two cells
+	 * Returns the horizonztalMargin. The horizonztalMargin is the horizontal
+	 * space between two cells
+	 * 
 	 * @return the horizonztalMargin
 	 * @since 0.1
 	 */
@@ -303,7 +400,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Returns the verticalMargin. The verticalMargin is the vertical space between two cells
+	 * Returns the verticalMargin. The verticalMargin is the vertical space
+	 * between two cells
+	 * 
 	 * @return the verticalMargin
 	 * @since 0.1
 	 */
@@ -317,7 +416,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	/**
 	 * Setter for the UIClass
-	 * @param ui the new UI
+	 * 
+	 * @param ui
+	 *            the new UI
 	 * @since 0.1
 	 */
 	public void setUI(BasicGridUI ui) {
@@ -357,7 +458,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Getter for the selectionForeground. Each selected Cell paints the foreground in this Color. That means the foreground-Property in the renderer is set to the selectionForeground.
+	 * Getter for the selectionForeground. Each selected Cell paints the
+	 * foreground in this Color. That means the foreground-Property in the
+	 * renderer is set to the selectionForeground.
 	 * 
 	 * @return the selectionForeground
 	 * @since 0.1
@@ -367,9 +470,14 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 *  Setter for the selectionForeground. Each selected Cell paints the foreground in this Color. That means the foreground-Property in the renderer is set to the selectionForeground.
-	 *  Fires <code>PropertyChangeEvent</code> with the <code>selectionForeground</code> propertyname
-	 * @param selectionForeground the new selctionForeground
+	 * Setter for the selectionForeground. Each selected Cell paints the
+	 * foreground in this Color. That means the foreground-Property in the
+	 * renderer is set to the selectionForeground. Fires
+	 * <code>PropertyChangeEvent</code> with the
+	 * <code>selectionForeground</code> propertyname
+	 * 
+	 * @param selectionForeground
+	 *            the new selctionForeground
 	 * @since 0.1
 	 */
 	public void setSelectionForeground(Color selectionForeground) {
@@ -380,9 +488,12 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 *  Setter for the selectionBorderColor. The UIClass can use this for borderpainting.
-	 *  Fires <code>PropertyChangeEvent</code> with the <code>selectionBorderColor</code> propertyname
-	 * @param selectionForeground the new selctionForeground
+	 * Setter for the selectionBorderColor. The UIClass can use this for
+	 * borderpainting. Fires <code>PropertyChangeEvent</code> with the
+	 * <code>selectionBorderColor</code> propertyname
+	 * 
+	 * @param selectionForeground
+	 *            the new selctionForeground
 	 * @since 0.1
 	 */
 	public void setSelectionBorderColor(Color selectionBorderColor) {
@@ -394,7 +505,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Getter for the selectionBorderColor. The UIClass can use this for borderpainting.
+	 * Getter for the selectionBorderColor. The UIClass can use this for
+	 * borderpainting.
+	 * 
 	 * @return the selectionBorderColor
 	 * @since 0.1
 	 */
@@ -403,7 +516,10 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Getter for the selectionBackground. Each selected Cell paints the background in this Color. That means the background-Property in the renderer is set to the selectionbackground.
+	 * Getter for the selectionBackground. Each selected Cell paints the
+	 * background in this Color. That means the background-Property in the
+	 * renderer is set to the selectionbackground.
+	 * 
 	 * @return the selectionBackground
 	 * @since 0.1
 	 */
@@ -412,9 +528,14 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Setter for the selectionBackground. Each selected Cell paints the background in this Color. That means the background-Property in the renderer is set to the selectionbackground.
-	 * Fires <code>PropertyChangeEvent</code> with the <code>selectionBackground</code> propertyname
-	 * @param selectionBackground the new selectionBackground
+	 * Setter for the selectionBackground. Each selected Cell paints the
+	 * background in this Color. That means the background-Property in the
+	 * renderer is set to the selectionbackground. Fires
+	 * <code>PropertyChangeEvent</code> with the
+	 * <code>selectionBackground</code> propertyname
+	 * 
+	 * @param selectionBackground
+	 *            the new selectionBackground
 	 * @since 0.1
 	 */
 	public void setSelectionBackground(Color selectionBackground) {
@@ -425,7 +546,10 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Getter for the default cellbackground. Each Cell paints the background in this Color. That means the background-Property in the renderer is set to the cellBackground.
+	 * Getter for the default cellbackground. Each Cell paints the background in
+	 * this Color. That means the background-Property in the renderer is set to
+	 * the cellBackground.
+	 * 
 	 * @return the default cellbackground
 	 * @since 0.1
 	 */
@@ -434,9 +558,13 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Setter for the default cellbackground. Each Cell paints the background in this Color. That means the background-Property in the renderer is set to the cellBackground.
-	 * Fires <code>PropertyChangeEvent</code> with the <code>cellBackground</code> propertyname
-	 * @param cellBackground the new default cellbackground
+	 * Setter for the default cellbackground. Each Cell paints the background in
+	 * this Color. That means the background-Property in the renderer is set to
+	 * the cellBackground. Fires <code>PropertyChangeEvent</code> with the
+	 * <code>cellBackground</code> propertyname
+	 * 
+	 * @param cellBackground
+	 *            the new default cellbackground
 	 * @since 0.1
 	 */
 	public void setCellBackground(Color cellBackground) {
@@ -448,7 +576,9 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	/**
 	 * Sets the index of the selected cell
-	 * @param index the index of the selected cell
+	 * 
+	 * @param index
+	 *            the index of the selected cell
 	 * @since 0.1
 	 */
 	public void setSelectedIndex(int index) {
@@ -460,17 +590,22 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 
 	/**
 	 * Returns the bounds inside the grid for the cell at index
-	 * @param index the index of the cell
+	 * 
+	 * @param index
+	 *            the index of the cell
 	 * @return the cellbounds
 	 * @since 0.1
 	 */
 	public Rectangle getCellBounds(int index) {
 		return getUI().getCellBounds(index);
 	}
-	
+
 	/**
-	 * Returns the index of the cell at the given point. Returns -1 if no cell is at this point
-	 * @param point the pint in the grid
+	 * Returns the index of the cell at the given point. Returns -1 if no cell
+	 * is at this point
+	 * 
+	 * @param point
+	 *            the pint in the grid
 	 * @return the index of the cell at the point
 	 * @see de.jgrid.ui.BasicGridUI
 	 * @since 0.1
@@ -478,30 +613,35 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	public int getCellAt(Point point) {
 		return getUI().getCellAt(point);
 	}
-	
+
 	public String getToolTipText(MouseEvent event) {
 		if (event != null) {
 			Point p = event.getPoint();
 			int index = getCellAt(p);
-			
-			if(index >= 0) {
+
+			if (index >= 0) {
 				Rectangle cellBounds = getCellBounds(index);
-				if(cellBounds != null && cellBounds.contains(p.x, p.y)) {
+				if (cellBounds != null && cellBounds.contains(p.x, p.y)) {
 					Component renderer = getCellRenderer(index)
-					.getGridCellRendererComponent(
-							this,
-							getModel().getElementAt(index),
-							index,
-							getSelectionModel().isSelectedIndex(index),
-							hasFocus()
-									&& getSelectionModel()
-											.getLeadSelectionIndex() == index);
+							.getGridCellRendererComponent(
+									this,
+									getModel().getElementAt(index),
+									index,
+									getSelectionModel().isSelectedIndex(index),
+									hasFocus()
+											&& getSelectionModel()
+													.getLeadSelectionIndex() == index);
 					if (renderer instanceof JComponent) {
 						return ((JComponent) renderer)
-								.getToolTipText(new MouseEvent(renderer, event.getID(), event
-										.getWhen(), event.getModifiers(), p.x - cellBounds.x, p.y - cellBounds.y, event
-										.getXOnScreen(), event.getYOnScreen(), event
-										.getClickCount(), event.isPopupTrigger(), event.getButton()));
+								.getToolTipText(new MouseEvent(renderer, event
+										.getID(), event.getWhen(), event
+										.getModifiers(), p.x - cellBounds.x,
+										p.y - cellBounds.y, event
+												.getXOnScreen(), event
+												.getYOnScreen(), event
+												.getClickCount(), event
+												.isPopupTrigger(), event
+												.getButton()));
 					}
 				}
 			}
@@ -509,12 +649,25 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		return super.getToolTipText();
 	}
 
-	 public GridCellRenderer getCellRenderer(int index) {
-		 return cellRendererManager.getRendererForClass(getModel().getElementAt(index).getClass());
-	 }
-	
 	/**
-	 * Getter for the horizontal alignment. <code>LEFT</code> / <code>CENTER</code> / <code>RIGHT</code> / <code>LEADING</code> & <code>TRAILING</code> allowed
+	 * Returns the {@ GridCellRenderer} for a specific cell
+	 * @param index the index of the cell
+	 * @return the {@ GridCellRenderer}
+	 * @since 0.3
+	 * @see JGrid#getCellRendererManager()
+	 * @see #setCellRendererManager(GridCellRendererManager)
+	 * @see GridCellRendererManager
+	 */
+	public GridCellRenderer getCellRenderer(int index) {
+		return cellRendererManager.getRendererForClass(getModel().getElementAt(
+				index).getClass());
+	}
+
+	/**
+	 * Getter for the horizontal alignment. <code>LEFT</code> /
+	 * <code>CENTER</code> / <code>RIGHT</code> / <code>LEADING</code> &
+	 * <code>TRAILING</code> allowed
+	 * 
 	 * @return the horizontal alignment
 	 * @since 0.1
 	 */
@@ -523,35 +676,69 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	/**
-	 * Setter for the horizontal alignment. <code>LEFT</code> / <code>CENTER</code> / <code>RIGHT</code> / <code>LEADING</code> & <code>TRAILING</code> allowed
-	 * Fires <code>PropertyChangeEvent</code> with the <code>horizontalAlignment</code> propertyname
-	 * @param alignment the new horizontal alignment
+	 * Setter for the horizontal alignment. <code>LEFT</code> /
+	 * <code>CENTER</code> / <code>RIGHT</code> / <code>LEADING</code> &
+	 * <code>TRAILING</code> allowed Fires <code>PropertyChangeEvent</code> with
+	 * the <code>horizontalAlignment</code> propertyname
+	 * 
+	 * @param alignment
+	 *            the new horizontal alignment
 	 * @since 0.1
-	 * @exception IllegalArgumentException if <code>alignment</code> not <code>LEFT</code> / <code>CENTER</code> / <code>RIGHT</code> / <code>LEADING</code> & <code>TRAILING</code>
+	 * @exception IllegalArgumentException
+	 *                if <code>alignment</code> not <code>LEFT</code> /
+	 *                <code>CENTER</code> / <code>RIGHT</code> /
+	 *                <code>LEADING</code> & <code>TRAILING</code>
 	 */
 	public void setHorizontalAlignment(int alignment) {
-		if ((alignment == LEFT) || (alignment == CENTER) || (alignment == RIGHT)
-				|| (alignment == LEADING) || (alignment == TRAILING)) {
+		if ((alignment == LEFT) || (alignment == CENTER)
+				|| (alignment == RIGHT) || (alignment == LEADING)
+				|| (alignment == TRAILING)) {
 			if (alignment == horizontalAlignment) {
 				return;
 			}
 			int oldValue = horizontalAlignment;
 			horizontalAlignment = alignment;
-			firePropertyChange("horizontalAlignment", oldValue, horizontalAlignment);
+			firePropertyChange("horizontalAlignment", oldValue,
+					horizontalAlignment);
 			repaint();
 		} else {
-			throw new IllegalArgumentException("Illegal HorizontalAlignment: " + alignment);
+			throw new IllegalArgumentException("Illegal HorizontalAlignment: "
+					+ alignment);
 		}
 	}
 
+	/**
+	 * Returns the model-index of the cell at <code>row</code> /
+	 * <code>column</code>
+	 * 
+	 * @param row
+	 *            the row of the cell
+	 * @param column
+	 *            the column of the cell
+	 * @return model-index of the cell
+	 */
 	public int getIndexAt(int row, int column) {
 		return getUI().getIndexAt(row, column);
 	}
 
+	/**
+	 * Returns the index of the column where <code>modelIndex</code> is in
+	 * 
+	 * @param selectedIndex
+	 *            the model-index
+	 * @return index of the column
+	 */
 	public int getColumnForIndex(int index) {
 		return getUI().getColumnForIndex(index);
 	}
 
+	/**
+	 * Returns the index of the row where <code>modelIndex</code> is in
+	 * 
+	 * @param selectedIndex
+	 *            the model-index
+	 * @return index of the row
+	 */
 	public int getRowForIndex(int index) {
 		return getUI().getRowForIndex(index);
 	}

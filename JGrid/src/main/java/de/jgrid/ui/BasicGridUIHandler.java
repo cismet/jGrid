@@ -33,6 +33,11 @@ import javax.swing.event.ListSelectionListener;
 
 import de.jgrid.JGrid;
 
+/**
+ * Handler for all JGrid events. The handler is added to the JGrid by the UI.
+ * @author hendrikebbers
+ *
+ */
 public class BasicGridUIHandler implements PropertyChangeListener,
 		MouseListener, KeyListener, ListSelectionListener, ListDataListener,
 		ComponentListener {
