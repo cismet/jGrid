@@ -29,6 +29,12 @@ import javax.swing.SwingConstants;
 
 import de.jgrid.JGrid;
 
+/**
+ * A basic L&F implementation of GridUI.  This implementation 
+ * is not static, i.e. there's  one UIView implementation for every JGrid objects.
+ * @author hendrikebbers
+ *
+ */
 public class BasicGridUI extends GridUI {
 
 	protected JGrid grid;

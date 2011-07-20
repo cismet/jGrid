@@ -34,10 +34,17 @@ import javax.swing.event.ListSelectionListener;
 import de.jgrid.JGrid;
 
 public class BasicGridUIHandler implements PropertyChangeListener,
-		MouseListener, KeyListener, ListSelectionListener, ListDataListener, ComponentListener {
+		MouseListener, KeyListener, ListSelectionListener, ListDataListener,
+		ComponentListener {
 
 	private JGrid grid;
 
+	/**
+	 * Constructs a {@code BasicGridUIHandler} for a specific JGrid
+	 * 
+	 * @param grid
+	 *            the JGrid this {@code BasicGridUIHandler} is used for
+	 */
 	public BasicGridUIHandler(JGrid grid) {
 		this.grid = grid;
 	}
@@ -74,90 +81,106 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	public void keyPressed(KeyEvent e) {
 		int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
 		int lead = grid.getSelectionModel().getLeadSelectionIndex();
-		
+
 		if (e.getKeyCode() == KeyEvent.VK_A && isMenuShortcutKeyDown(e)) {
-			grid.getSelectionModel().addSelectionInterval(0, grid.getModel().getSize() - 1);
+			grid.getSelectionModel().addSelectionInterval(0,
+					grid.getModel().getSize() - 1);
 		}
-		
+
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
-			if(e.isShiftDown()) {
-				if(!isBetweenOrEqualsLeadAndAncestor(nextIndex)) {
-					if(grid.getSelectionModel().isSelectedIndex(nextIndex)) {
-						//Einen überspringen und den nächsten selektieren
-						if(nextIndex > 0) {
-							grid.getSelectionModel().addSelectionInterval(lead, nextIndex - 1);
+			if (e.isShiftDown()) {
+				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex)) {
+					if (grid.getSelectionModel().isSelectedIndex(nextIndex)) {
+						// Einen überspringen und den nächsten selektieren
+						if (nextIndex > 0) {
+							grid.getSelectionModel().addSelectionInterval(lead,
+									nextIndex - 1);
 						} else {
 							grid.getSelectionModel().setLeadSelectionIndex(0);
 						}
 					} else {
-						grid.getSelectionModel().addSelectionInterval(lead, nextIndex);
+						grid.getSelectionModel().addSelectionInterval(lead,
+								nextIndex);
 					}
 					grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
 				} else {
-					if(nextIndex >= 0) {
-						grid.getSelectionModel().removeSelectionInterval(lead, lead);
-						grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
-						grid.getSelectionModel().setLeadSelectionIndex(nextIndex);
+					if (nextIndex >= 0) {
+						grid.getSelectionModel().removeSelectionInterval(lead,
+								lead);
+						grid.getSelectionModel().setAnchorSelectionIndex(
+								ancestor);
+						grid.getSelectionModel().setLeadSelectionIndex(
+								nextIndex);
 					}
 				}
 			} else {
-				if(nextIndex >= 0) {
+				if (nextIndex >= 0) {
 					grid.setSelectedIndex(nextIndex);
 				}
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() + 1;
-			if(e.isShiftDown()) {
-				if(!isBetweenOrEqualsLeadAndAncestor(nextIndex)) {
-					if(grid.getSelectionModel().isSelectedIndex(nextIndex)) {
-						//Einen überspringen und den nächsten selektieren
-						if(nextIndex + 1 < grid.getModel().getSize()) {
-							grid.getSelectionModel().addSelectionInterval(lead, nextIndex + 1);
+			if (e.isShiftDown()) {
+				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex)) {
+					if (grid.getSelectionModel().isSelectedIndex(nextIndex)) {
+						// Einen überspringen und den nächsten selektieren
+						if (nextIndex + 1 < grid.getModel().getSize()) {
+							grid.getSelectionModel().addSelectionInterval(lead,
+									nextIndex + 1);
 						} else {
-							grid.getSelectionModel().setLeadSelectionIndex(grid.getModel().getSize() - 1);
+							grid.getSelectionModel().setLeadSelectionIndex(
+									grid.getModel().getSize() - 1);
 						}
 					} else {
-						if(nextIndex < grid.getModel().getSize()) {
-							grid.getSelectionModel().addSelectionInterval(lead, nextIndex);
+						if (nextIndex < grid.getModel().getSize()) {
+							grid.getSelectionModel().addSelectionInterval(lead,
+									nextIndex);
 						}
 					}
 					grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
 				} else {
-					if(nextIndex < grid.getModel().getSize() ) {
-						grid.getSelectionModel().removeSelectionInterval(lead, lead);
-						grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
-						grid.getSelectionModel().setLeadSelectionIndex(nextIndex);
+					if (nextIndex < grid.getModel().getSize()) {
+						grid.getSelectionModel().removeSelectionInterval(lead,
+								lead);
+						grid.getSelectionModel().setAnchorSelectionIndex(
+								ancestor);
+						grid.getSelectionModel().setLeadSelectionIndex(
+								nextIndex);
 					}
 				}
 			} else {
-				if(nextIndex < grid.getModel().getSize()) {
+				if (nextIndex < grid.getModel().getSize()) {
 					grid.setSelectedIndex(nextIndex);
 				}
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			int selectedIndex = grid.getSelectionModel().getLeadSelectionIndex();
+			int selectedIndex = grid.getSelectionModel()
+					.getLeadSelectionIndex();
 			int row = grid.getRowForIndex(selectedIndex);
 			int column = grid.getColumnForIndex(selectedIndex);
 
 			int nextIndex = grid.getIndexAt(row + 1, column);
-			if(e.isShiftDown()) {
-				//TODO:Noch nicht richtig
-				grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel()
-						.getLeadSelectionIndex(), nextIndex);
+			if (e.isShiftDown()) {
+				// TODO:Noch nicht richtig
+				grid.getSelectionModel().addSelectionInterval(
+						grid.getSelectionModel().getLeadSelectionIndex(),
+						nextIndex);
 			} else {
 				grid.setSelectedIndex(Math.min(grid.getModel().getSize() - 1,
 						nextIndex));
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-			int selectedIndex = grid.getSelectionModel().getLeadSelectionIndex();
+			int selectedIndex = grid.getSelectionModel()
+					.getLeadSelectionIndex();
 			int row = grid.getRowForIndex(selectedIndex);
 			int column = grid.getColumnForIndex(selectedIndex);
 			int nextIndex = grid.getIndexAt(row - 1, column);
-			if(e.isShiftDown()) {
-				//TODO: Noch nicht richtig
-				grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel()
-						.getLeadSelectionIndex(), nextIndex);
+			if (e.isShiftDown()) {
+				// TODO: Noch nicht richtig
+				grid.getSelectionModel().addSelectionInterval(
+						grid.getSelectionModel().getLeadSelectionIndex(),
+						nextIndex);
 			} else {
 				grid.setSelectedIndex(Math.max(0, nextIndex));
 			}
@@ -172,27 +195,33 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 				grid.requestFocus();
 			}
 			if (isMenuShortcutKeyDown(e)) {
-				if(grid.getSelectionModel().isSelectedIndex(index)) {
-					grid.getSelectionModel().removeSelectionInterval(index, index);
-					
+				if (grid.getSelectionModel().isSelectedIndex(index)) {
+					grid.getSelectionModel().removeSelectionInterval(index,
+							index);
+
 				} else {
 					grid.getSelectionModel().addSelectionInterval(index, index);
 				}
 			} else if (e.isShiftDown()) {
-				int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
+				int ancestor = grid.getSelectionModel()
+						.getAnchorSelectionIndex();
 				int lead = grid.getSelectionModel().getLeadSelectionIndex();
-				
-				if(isBetweenOrEqualsLeadAndAncestor(index)) {
-					grid.getSelectionModel().removeSelectionInterval(lead, index);
-					
+
+				if (isBetweenOrEqualsLeadAndAncestor(index)) {
+					grid.getSelectionModel().removeSelectionInterval(lead,
+							index);
+
 					grid.getSelectionModel().addSelectionInterval(index, index);
 					grid.getSelectionModel().setLeadSelectionIndex(index);
 				} else {
-					if(!isOnSameSideFromAncestorAsLead(index)) {
-						grid.getSelectionModel().removeSelectionInterval(ancestor, lead);
-						grid.getSelectionModel().addSelectionInterval(ancestor, index);
+					if (!isOnSameSideFromAncestorAsLead(index)) {
+						grid.getSelectionModel().removeSelectionInterval(
+								ancestor, lead);
+						grid.getSelectionModel().addSelectionInterval(ancestor,
+								index);
 					} else {
-						grid.getSelectionModel().addSelectionInterval(lead, index);
+						grid.getSelectionModel().addSelectionInterval(lead,
+								index);
 					}
 				}
 				grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
@@ -205,30 +234,47 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		// hin???)
 	}
 
+	/**
+	 * Returns true is both the index and the leadIndex of the selectionModel
+	 * are smaller or bigger than the ancestorIndex. The SelectionModel of the
+	 * JGrid is used.
+	 * 
+	 * @param index
+	 *            the index of interest
+	 * @return true if index and leadIndex are on the same side
+	 */
 	private boolean isOnSameSideFromAncestorAsLead(int index) {
 		int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
 		int lead = grid.getSelectionModel().getLeadSelectionIndex();
-		if(lead <= ancestor && index <= ancestor) {
+		if (lead <= ancestor && index <= ancestor) {
 			return true;
 		}
-		if(lead >= ancestor && index >= ancestor) {
+		if (lead >= ancestor && index >= ancestor) {
 			return true;
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Returns true is the index is between the leadIndex and the ancestorIndex.
+	 * The SelectionModel of the JGrid is used.
+	 * 
+	 * @param index
+	 *            the index of interest
+	 * @return true if  index is between the leadIndex and the ancestorIndex
+	 */
 	private boolean isBetweenOrEqualsLeadAndAncestor(int index) {
 		int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
 		int lead = grid.getSelectionModel().getLeadSelectionIndex();
-		if(ancestor <= index && index <= lead) {
+		if (ancestor <= index && index <= lead) {
 			return true;
 		}
-		if(lead <= index && index <= ancestor) {
+		if (lead <= index && index <= ancestor) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void keyReleased(KeyEvent e) {
 	}
@@ -259,9 +305,9 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	}
 
 	public boolean isMenuShortcutKeyDown(InputEvent event) {
-        return (event.getModifiers() & 
-                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0;
-    }
+		return (event.getModifiers() & Toolkit.getDefaultToolkit()
+				.getMenuShortcutKeyMask()) != 0;
+	}
 
 	@Override
 	public void componentResized(ComponentEvent e) {
