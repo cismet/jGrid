@@ -102,6 +102,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		setAutoscrolls(true);
 		setOpaque(true);
 		setCellRendererManager(new GridCellRendererManager());
+		setUI(new MacOsGridUI());
 		updateUI();
 	}
 	
@@ -146,7 +147,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		
 		firePropertyChange("cellRendererManager", oldManager, this.cellRendererManager);
 		
-		resizeAndRepaint();
+		revalidateAndRepaint();
 	}
 	
 	public GridCellRendererManager getCellRendererManager() {
@@ -168,7 +169,10 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
         selectionModel.clearSelection();
     }
 
-    protected void resizeAndRepaint() {
+    /**
+     * Calls revalidate() and repaint()
+     */
+    protected void revalidateAndRepaint() {
         revalidate();
         repaint();
     }
@@ -235,7 +239,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	public void updateUI() {
-		setUI(new MacOsGridUI());
 		cellRendererManager.updateRendererUI();
 	}
 
@@ -507,7 +510,6 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	}
 
 	 public GridCellRenderer getCellRenderer(int index) {
-		 //TODO: Vererbung fehlt hier völlig!!!
 		 return cellRendererManager.getRendererForClass(getModel().getElementAt(index).getClass());
 	 }
 	
