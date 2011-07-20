@@ -87,6 +87,10 @@ public class BasicGridUI extends GridUI {
 		return -1;
 	}
 
+	/**
+	 * Helper for debbuging. Returns true if systemproperty "jgrid.debug" is set to "true"
+	 * @return true if debugMode is active
+	 */
 	protected boolean isDebugMode() {
 		return "true".equals(System.getProperty("jgrid.debug", "false"));
 	}
@@ -94,14 +98,19 @@ public class BasicGridUI extends GridUI {
 	/**
 	 * Return the index or -1 if the index is not in the range of the ListModel
 	 * 
-	 * @param index
-	 * @param grid
-	 * @return
+	 * @param index 
+	 * @param grid 
+	 * @return the index or -1
 	 */
 	private int adjustIndex(int index, JGrid grid) {
 		return index < grid.getModel().getSize() ? index : -1;
 	}
 
+	/**
+	 * Returns the preferred height of the JGrid for the specified width
+	 * @param width the given width
+	 * @return the preferred height
+	 */
 	protected int getPreferredHeightForWidth(int width) {
 		// TODO: Label mit einbauen
 		int cellsInRow = 0;
@@ -217,10 +226,30 @@ public class BasicGridUI extends GridUI {
 		rendererPane.removeAll();
 	}
 
+	/**
+     * Paints the Border for the specified cell.
+     * Subclasses should override this method and use the specified <code>Graphics</code> object to render the Border of the cell.
+     *
+     * @param g the <code>Graphics</code> context in which to paint
+     * @param c the JGrid being painted
+     * @param index the cellindex
+     * @param bounds the bounds of the cell
+     *
+     */ 
 	protected void paintCellBorder(Graphics g, JComponent c,
 			int index, Rectangle bounds, int leadIndex) {
 	}
 
+	/**
+     * Paints the specified cell.
+     * Subclasses should override this method and use the specified <code>Graphics</code> object to render the cell.
+     *
+     * @param g the <code>Graphics</code> context in which to paint
+     * @param c the JGrid being painted
+     * @param index the cellindex
+     * @param bounds the bounds of the cell
+     *
+     */ 
 	protected void paintCell(Graphics g, JComponent c, int index,
 			Rectangle bounds, int leadIndex) {
 		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);

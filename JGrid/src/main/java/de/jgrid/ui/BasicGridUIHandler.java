@@ -1,3 +1,17 @@
+/*
+ * Created on July 20, 2011
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * Copyright @2011 Hendrik Ebbers
+ */
 package de.jgrid.ui;
 
 import java.awt.Toolkit;
@@ -30,10 +44,6 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void intervalAdded(ListDataEvent e) {
-		// TODO: Hier muss eigentlich nur ein Marker gesetzt werden, dass die
-		// Bounds "dirty" sind. Dann werden sie erst neu berechnet, wenn sie
-		// benötigt werden. Hierdurch wird die Methode zum Berechnen auch
-		// private
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: Alles unterhalb des neuen Index repainten
 		grid.repaint();
@@ -41,10 +51,6 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void intervalRemoved(ListDataEvent e) {
-		// TODO: Hier muss eigentlich nur ein Marker gesetzt werden, dass die
-		// Bounds "dirty" sind. Dann werden sie erst neu berechnet, wenn sie
-		// benötigt werden. Hierdurch wird die Methode zum Berechnen auch
-		// private
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: Alles unterhalb des gelöschten Index repainten
 		grid.repaint();
@@ -52,10 +58,6 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void contentsChanged(ListDataEvent e) {
-		// TODO: Hier muss eigentlich nur ein Marker gesetzt werden, dass die
-		// Bounds "dirty" sind. Dann werden sie erst neu berechnet, wenn sie
-		// benötigt werden. Hierdurch wird die Methode zum Berechnen auch
-		// private
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: nur geänderte Indexes repainten
 		grid.repaint();
@@ -63,10 +65,6 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		// TODO: Hier muss eigentlich nur ein Marker gesetzt werden, dass die
-		// Bounds "dirty" sind. Dann werden sie erst neu berechnet, wenn sie
-		// benötigt werden. Hierdurch wird die Methode zum Berechnen auch
-		// private
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: nur selektion repainten
 		grid.repaint();
@@ -257,10 +255,6 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO: Hier muss eigentlich nur ein Marker gesetzt werden, dass die
-		// Bounds "dirty" sind. Dann werden sie erst neu berechnet, wenn sie
-		// benötigt werden. Hierdurch wird die Methode zum Berechnen auch
-		// private
 		grid.getUI().markCellBoundsAsDirty();
 	}
 

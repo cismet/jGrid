@@ -51,7 +51,8 @@ public class MacOsGridUI extends BasicGridUI {
 		grid.setSelectionBackground(new Color(43,43,43));
 		grid.setCellBackground(new Color(43,43,43));
 	}
-	
+
+	@Override
 	protected void paintCell(Graphics g, JComponent c, int index,
 			Rectangle bounds, int leadIndex) {
 		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
@@ -86,6 +87,7 @@ public class MacOsGridUI extends BasicGridUI {
 		g.drawImage(offScreenImage, bounds.x, bounds.y, null);
 	}
 	
+	@Override
 	protected void paintCellBorder(Graphics g, JComponent c, int index,
 			Rectangle bounds, int leadIndex) {
 		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
