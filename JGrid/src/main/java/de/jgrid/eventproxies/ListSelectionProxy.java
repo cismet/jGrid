@@ -20,10 +20,19 @@ import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+/**
+ * Proxyclass for ListSelectionListeners. All ListSelectionEvents posted to an instance will transmited to the ListSelectionListeners registered at the proxy.
+ * @author hendrikebbers
+ *
+ */
 public class ListSelectionProxy implements ListSelectionListener {
 
 	private List<ListSelectionListener> listenerList;
 	
+	/**
+	 * Registers a ListSelectionListener to the proxy
+	 * @param l the ListSelectionListener to register
+	 */
 	public void addListSelectionListener(ListSelectionListener l) {
 		if(listenerList == null) {
 			listenerList = new ArrayList<ListSelectionListener>();
@@ -31,6 +40,10 @@ public class ListSelectionProxy implements ListSelectionListener {
 		listenerList.add(l);
 	}
 	
+	/**
+	 * Deregisters a ListSelectionListener to the proxy
+	 * @param l the ListSelectionListener to deregister
+	 */
 	public void removeListSelectionListener(ListSelectionListener l) {
 		if(listenerList != null) {
 			listenerList.add(l);

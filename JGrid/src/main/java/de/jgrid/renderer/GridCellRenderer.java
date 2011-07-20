@@ -28,7 +28,6 @@ import de.jgrid.JGrid;
  * @version 0.1
  * @see ListCellRenderer
  * @see JGrid
- * @see GridLabelRenderer
  */
 public interface GridCellRenderer {
 
