@@ -95,20 +95,12 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
 			if (e.isShiftDown()) {
-				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex)) {
-					if (grid.getSelectionModel().isSelectedIndex(nextIndex)) {
-						// Einen überspringen und den nächsten selektieren
-						if (nextIndex > 0) {
-							grid.getSelectionModel().addSelectionInterval(lead,
-									nextIndex - 1);
-						} else {
-							grid.getSelectionModel().setLeadSelectionIndex(0);
-						}
-					} else {
-						grid.getSelectionModel().addSelectionInterval(lead,
-								nextIndex);
+				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex) && nextIndex >= 0) {
+					while(grid.getSelectionModel().isSelectedIndex(nextIndex) && nextIndex > 0) {
+						nextIndex--;
 					}
-					grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
+					grid.getSelectionModel().addSelectionInterval(lead,
+							nextIndex);
 				} else {
 					if (nextIndex >= 0) {
 						grid.getSelectionModel().removeSelectionInterval(lead,
@@ -127,23 +119,12 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() + 1;
 			if (e.isShiftDown()) {
-				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex)) {
-					if (grid.getSelectionModel().isSelectedIndex(nextIndex)) {
-						// Einen überspringen und den nächsten selektieren
-						if (nextIndex + 1 < grid.getModel().getSize()) {
-							grid.getSelectionModel().addSelectionInterval(lead,
-									nextIndex + 1);
-						} else {
-							grid.getSelectionModel().setLeadSelectionIndex(
-									grid.getModel().getSize() - 1);
-						}
-					} else {
-						if (nextIndex < grid.getModel().getSize()) {
-							grid.getSelectionModel().addSelectionInterval(lead,
-									nextIndex);
-						}
+				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex) && nextIndex < grid.getModel().getSize()) {
+					while(grid.getSelectionModel().isSelectedIndex(nextIndex) && nextIndex < grid.getModel().getSize() - 1) {
+						nextIndex++;
 					}
-					grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
+					grid.getSelectionModel().addSelectionInterval(lead,
+							nextIndex);
 				} else {
 					if (nextIndex < grid.getModel().getSize()) {
 						grid.getSelectionModel().removeSelectionInterval(lead,
@@ -190,6 +171,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 				grid.setSelectedIndex(Math.max(0, nextIndex));
 			}
 		}
+		checkForSurroundingSelections();
 	}
 
 	@Override
@@ -235,10 +217,59 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 			}
 
 		}
+		checkForSurroundingSelections();
 		// TODO: Wenn selection nicht sichtbar View anpassen (gehört das hier
 		// hin???)
 	}
 
+	public void checkForSurroundingSelections() {
+		if(grid.getSelectionModel().getAnchorSelectionIndex() > grid.getSelectionModel().getLeadSelectionIndex()) {
+			int nextCheckIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
+			while(grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex >= 0) {
+				if (nextCheckIndex > 0) {
+					grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel().getLeadSelectionIndex(),
+							nextCheckIndex);
+				} else {
+					grid.getSelectionModel().setLeadSelectionIndex(0);
+				}	
+				nextCheckIndex--;
+			}
+			nextCheckIndex = grid.getSelectionModel().getAnchorSelectionIndex() + 1;
+			while (grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex < grid.getModel().getSize()) {
+				if (nextCheckIndex < grid.getModel().getSize() - 1) {
+					grid.getSelectionModel().addSelectionInterval(nextCheckIndex, grid.getSelectionModel().getLeadSelectionIndex());
+					grid.getSelectionModel().setAnchorSelectionIndex(nextCheckIndex);
+				} else {
+					grid.getSelectionModel().setAnchorSelectionIndex(
+							grid.getModel().getSize() - 1);
+				}
+				nextCheckIndex++;
+			}
+		} else if(grid.getSelectionModel().getAnchorSelectionIndex() < grid.getSelectionModel().getLeadSelectionIndex()) {
+			int nextCheckIndex = grid.getSelectionModel().getLeadSelectionIndex() + 1;
+			while (grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex < grid.getModel().getSize()) {
+				if (nextCheckIndex < grid.getModel().getSize() - 1) {
+					grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel().getLeadSelectionIndex(),
+							nextCheckIndex);
+				} else {
+					grid.getSelectionModel().setLeadSelectionIndex(
+							grid.getModel().getSize() - 1);
+				}
+				nextCheckIndex++;
+			}
+			nextCheckIndex = grid.getSelectionModel().getAnchorSelectionIndex() - 1;
+			while (grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex >= 0) {
+				if (nextCheckIndex > 0) {
+					grid.getSelectionModel().addSelectionInterval(nextCheckIndex, grid.getSelectionModel().getLeadSelectionIndex());
+					grid.getSelectionModel().setAnchorSelectionIndex(nextCheckIndex);
+				} else {
+					grid.getSelectionModel().setAnchorSelectionIndex(0);
+				}	
+				nextCheckIndex--;
+			}
+		}
+	}
+	
 	/**
 	 * Returns true is both the index and the leadIndex of the selectionModel
 	 * are smaller or bigger than the ancestorIndex. The SelectionModel of the
