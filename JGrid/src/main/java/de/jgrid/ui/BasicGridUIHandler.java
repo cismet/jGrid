@@ -95,7 +95,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
 			if (e.isShiftDown()) {
-				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex) && nextIndex >= 0) {
+				if (!GridSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), nextIndex) && nextIndex >= 0) {
 					while(grid.getSelectionModel().isSelectedIndex(nextIndex) && nextIndex > 0) {
 						nextIndex--;
 					}
@@ -119,7 +119,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() + 1;
 			if (e.isShiftDown()) {
-				if (!isBetweenOrEqualsLeadAndAncestor(nextIndex) && nextIndex < grid.getModel().getSize()) {
+				if (!GridSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), nextIndex) && nextIndex < grid.getModel().getSize()) {
 					while(grid.getSelectionModel().isSelectedIndex(nextIndex) && nextIndex < grid.getModel().getSize() - 1) {
 						nextIndex++;
 					}
@@ -171,7 +171,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 				grid.setSelectedIndex(Math.max(0, nextIndex));
 			}
 		}
-		checkForSurroundingSelections();
+		GridSelectionUtilities.checkForSurroundingSelections(grid.getSelectionModel(), grid.getModel().getSize() - 1);
 	}
 
 	@Override
@@ -194,14 +194,14 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 						.getAnchorSelectionIndex();
 				int lead = grid.getSelectionModel().getLeadSelectionIndex();
 
-				if (isBetweenOrEqualsLeadAndAncestor(index)) {
+				if (GridSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), index)) {
 					grid.getSelectionModel().removeSelectionInterval(lead,
 							index);
 
 					grid.getSelectionModel().addSelectionInterval(index, index);
 					grid.getSelectionModel().setLeadSelectionIndex(index);
 				} else {
-					if (!isOnSameSideFromAncestorAsLead(index)) {
+					if (!GridSelectionUtilities.isOnSameSideFromAncestorAsLead(grid.getSelectionModel(), index)) {
 						grid.getSelectionModel().removeSelectionInterval(
 								ancestor, lead);
 						grid.getSelectionModel().addSelectionInterval(ancestor,
@@ -217,98 +217,9 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 			}
 
 		}
-		checkForSurroundingSelections();
+		GridSelectionUtilities.checkForSurroundingSelections(grid.getSelectionModel(), grid.getModel().getSize() - 1);
 		// TODO: Wenn selection nicht sichtbar View anpassen (gehört das hier
 		// hin???)
-	}
-
-	public void checkForSurroundingSelections() {
-		if(grid.getSelectionModel().getAnchorSelectionIndex() > grid.getSelectionModel().getLeadSelectionIndex()) {
-			int nextCheckIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
-			while(grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex >= 0) {
-				if (nextCheckIndex > 0) {
-					grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel().getLeadSelectionIndex(),
-							nextCheckIndex);
-				} else {
-					grid.getSelectionModel().setLeadSelectionIndex(0);
-				}	
-				nextCheckIndex--;
-			}
-			nextCheckIndex = grid.getSelectionModel().getAnchorSelectionIndex() + 1;
-			while (grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex < grid.getModel().getSize()) {
-				if (nextCheckIndex < grid.getModel().getSize() - 1) {
-					grid.getSelectionModel().addSelectionInterval(nextCheckIndex, grid.getSelectionModel().getLeadSelectionIndex());
-					grid.getSelectionModel().setAnchorSelectionIndex(nextCheckIndex);
-				} else {
-					grid.getSelectionModel().setAnchorSelectionIndex(
-							grid.getModel().getSize() - 1);
-				}
-				nextCheckIndex++;
-			}
-		} else if(grid.getSelectionModel().getAnchorSelectionIndex() < grid.getSelectionModel().getLeadSelectionIndex()) {
-			int nextCheckIndex = grid.getSelectionModel().getLeadSelectionIndex() + 1;
-			while (grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex < grid.getModel().getSize()) {
-				if (nextCheckIndex < grid.getModel().getSize() - 1) {
-					grid.getSelectionModel().addSelectionInterval(grid.getSelectionModel().getLeadSelectionIndex(),
-							nextCheckIndex);
-				} else {
-					grid.getSelectionModel().setLeadSelectionIndex(
-							grid.getModel().getSize() - 1);
-				}
-				nextCheckIndex++;
-			}
-			nextCheckIndex = grid.getSelectionModel().getAnchorSelectionIndex() - 1;
-			while (grid.getSelectionModel().isSelectedIndex(nextCheckIndex) && nextCheckIndex >= 0) {
-				if (nextCheckIndex > 0) {
-					grid.getSelectionModel().addSelectionInterval(nextCheckIndex, grid.getSelectionModel().getLeadSelectionIndex());
-					grid.getSelectionModel().setAnchorSelectionIndex(nextCheckIndex);
-				} else {
-					grid.getSelectionModel().setAnchorSelectionIndex(0);
-				}	
-				nextCheckIndex--;
-			}
-		}
-	}
-	
-	/**
-	 * Returns true is both the index and the leadIndex of the selectionModel
-	 * are smaller or bigger than the ancestorIndex. The SelectionModel of the
-	 * JGrid is used.
-	 * 
-	 * @param index
-	 *            the index of interest
-	 * @return true if index and leadIndex are on the same side
-	 */
-	private boolean isOnSameSideFromAncestorAsLead(int index) {
-		int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
-		int lead = grid.getSelectionModel().getLeadSelectionIndex();
-		if (lead <= ancestor && index <= ancestor) {
-			return true;
-		}
-		if (lead >= ancestor && index >= ancestor) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Returns true is the index is between the leadIndex and the ancestorIndex.
-	 * The SelectionModel of the JGrid is used.
-	 * 
-	 * @param index
-	 *            the index of interest
-	 * @return true if  index is between the leadIndex and the ancestorIndex
-	 */
-	private boolean isBetweenOrEqualsLeadAndAncestor(int index) {
-		int ancestor = grid.getSelectionModel().getAnchorSelectionIndex();
-		int lead = grid.getSelectionModel().getLeadSelectionIndex();
-		if (ancestor <= index && index <= lead) {
-			return true;
-		}
-		if (lead <= index && index <= ancestor) {
-			return true;
-		}
-		return false;
 	}
 
 	@Override
