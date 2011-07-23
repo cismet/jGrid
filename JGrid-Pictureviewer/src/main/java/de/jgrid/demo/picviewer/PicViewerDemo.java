@@ -42,6 +42,7 @@ import javax.swing.event.ChangeListener;
 
 import de.jgrid.JGrid;
 import de.jgrid.demo.util.CoolProgressBarUI;
+import de.jgrid.demo.util.ImageUtilities;
 import de.jgrid.demo.util.UrlLoader;
 
 public class PicViewerDemo extends JFrame {
@@ -173,9 +174,9 @@ public class PicViewerDemo extends JFrame {
 				PicViewerObject obj = new PicViewerObject();
 				for (int i = 1; i <= 10; i++) {
 					try {
-						obj.addImage(ImageIO.read(new URL(
+						obj.addImage(ImageUtilities.createCompatibleImage(ImageIO.read(new URL(
 								"http://guigarage.com/downloads/viewerpics/" + folder + "/"
-										+ i + ".png")));
+										+ i + ".png"))));
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}

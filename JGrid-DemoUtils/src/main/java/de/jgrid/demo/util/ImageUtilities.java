@@ -59,6 +59,14 @@ public class ImageUtilities {
 	        return bimage;
 	    }
 
+	   public static BufferedImage createCompatibleImage(BufferedImage image) {
+		   BufferedImage ret = createCompatibleImage(image.getWidth(), image.getHeight(), true);
+		   Graphics g = ret.createGraphics();
+		   g.drawImage(image, 0, 0, null);
+		   g.dispose();
+		   return ret;
+	   }
+	   
 	    /**
 	     * Progressive bilinear scaling: for any downscale size, scale iteratively by halves using BILINEAR filtering until
 	     * the proper size is reached.

@@ -21,6 +21,8 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import de.jgrid.demo.util.ImageUtilities;
+
 public class Book {
 
 	private String titel;
@@ -31,7 +33,7 @@ public class Book {
 		this.titel = titel;
 		try {
 //			cover = ImageIO.read(new URL("http://covers.openlibrary.org/b/isbn/" + isbn + "-L.jpg"));
-			cover = ImageIO.read(new URL(coverUrl));
+			cover = ImageUtilities.createCompatibleImage(ImageIO.read(new URL(coverUrl)));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

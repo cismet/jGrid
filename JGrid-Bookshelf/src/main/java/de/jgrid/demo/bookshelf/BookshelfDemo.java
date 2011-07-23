@@ -31,6 +31,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 
 import de.jgrid.JGrid;
 import de.jgrid.demo.util.CoolProgressBarUI;
@@ -169,10 +170,19 @@ public class BookshelfDemo extends JFrame {
 		getContentPane().add(layeredPane);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
-		setVisible(true);
 	}
 	
 	public static void main(String[] args) {
-		new BookshelfDemo();
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			public void run() {
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				new BookshelfDemo().setVisible(true);
+			}
+		});
 	}
 }

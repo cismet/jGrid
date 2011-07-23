@@ -168,10 +168,8 @@ public class BasicGridUI extends GridUI {
 				startX = aktWidth / 2;
 			}
 		} else if (grid.getHorizontalAlignment() == SwingConstants.RIGHT) {
-			if (aktWidth > widthOneCell) {
-				while (aktWidth > widthOneCell) {
-					aktWidth = aktWidth - widthOneCell;
-				}
+			while (aktWidth > widthOneCell) {
+				aktWidth = aktWidth - widthOneCell;
 				startX = aktWidth;
 			}
 		}
