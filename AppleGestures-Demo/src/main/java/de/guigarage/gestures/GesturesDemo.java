@@ -1,18 +1,28 @@
 package de.guigarage.gestures;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+
+import com.apple.eawt.event.GestureUtilities;
 import com.apple.eawt.event.MagnificationEvent;
+import com.apple.eawt.event.MagnificationListener;
 import com.apple.eawt.event.RotationEvent;
+import com.apple.eawt.event.RotationListener;
 
 import de.jgrid.demo.util.ImageUtilities;
 import de.jgrid.demo.util.UrlLoader;
@@ -31,6 +41,10 @@ public class GesturesDemo extends JFrame {
 
 	private BufferedImage helpLayer;
 
+	private float alphaValue = 1.0f;
+	
+	private Animator alphaAnimator;
+	
 	public GesturesDemo() {
 		setTitle("GesturesDemo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
@@ -57,27 +71,37 @@ public class GesturesDemo extends JFrame {
 				g2.drawImage(duke, (int) (getWidth() / 2 - (duke.getWidth() / 2) * magnification), (int) (getHeight() / 2 - (duke.getHeight() / 2) * magnification), (int) (duke.getWidth() * magnification), (int) (duke.getHeight() * magnification), null);
 				g2.dispose();
 				
-				g.drawImage(helpLayer, 0, 0, null);
+				g2 = (Graphics2D) g.create();
+				AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue);
+				g2.setComposite(alphaComposite);
+				g2.drawImage(helpLayer, 0, 0, null);
+				g2.dispose();
 			}
 		};
 		getContentPane().add(panel, BorderLayout.CENTER);
-		com.apple.eawt.event.GestureUtilities.addGestureListenerTo(panel, new com.apple.eawt.event.RotationListener() {
+		try {
+		GestureUtilities.addGestureListenerTo(panel, new RotationListener() {
 
-			@Override
 			public void rotate(RotationEvent arg0) {
 				rotation = rotation + arg0.getRotation();
 				repaint();
+				animateAlpha();
 			}
 		});
 		
-		com.apple.eawt.event.GestureUtilities.addGestureListenerTo(panel, new com.apple.eawt.event.MagnificationListener() {
+		GestureUtilities.addGestureListenerTo(panel, new MagnificationListener() {
 
-			@Override
 			public void magnify(MagnificationEvent arg0) {
 				magnification = magnification + arg0.getMagnification();
-				repaint();
+				repaint();	
+				animateAlpha();
 			}
+			
 		});
+		} catch (Exception e) {
+			System.out.println("Gestures-API not Supported!");
+			e.printStackTrace();
+		}
 		setSize(800, 600);
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -85,5 +109,28 @@ public class GesturesDemo extends JFrame {
 	
 	public static void main(String[] args) {
 		 new GesturesDemo().setVisible(true);
+	}
+
+	private void animateAlpha() {
+		if(alphaAnimator == null) {
+			alphaAnimator = new Animator(1000);
+			alphaAnimator.setAcceleration(0.3f);
+			alphaAnimator.addTarget(new TimingTarget() {
+				
+				public void timingEvent(float fraction) {
+					alphaValue = Math.max(0.0f, 1.0f - fraction);
+					repaint();
+				}
+				
+				public void repeat() {}
+				
+				public void end() {
+					alphaValue = 0.0f;
+				}
+				
+				public void begin() {}
+			});
+			alphaAnimator.start();
+		}
 	}
 }
