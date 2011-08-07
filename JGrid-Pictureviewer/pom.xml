@@ -20,6 +20,11 @@
 			<artifactId>jgrid-demo-utils</artifactId>
 			<version>0.3-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>de.guigarage</groupId>
+			<artifactId>gestures-wrapper</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
