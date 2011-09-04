@@ -10,8 +10,10 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.JScrollPane;
+
 import de.guigarage.demos.tunes.TunesApp;
-import de.guigarage.demos.tunes.views.renderer.TunesAlbumGridRenderer;
+import de.guigarage.demos.tunes.views.renderer.BetterTunesAlbumGridRenderer;
 import de.guigarage.gestures.GestureMagnificationEvent;
 import de.guigarage.gestures.GestureMagnificationListener;
 import de.guigarage.gestures.GestureUtilities;
@@ -26,32 +28,39 @@ public class TunesGridView extends AbstractTunesDataView {
 	
 	public TunesGridView(TunesApp app) {
 		super(app);
-		add(getGrid());
+		JScrollPane scrollPane = new JScrollPane(getGrid());
+		scrollPane.setBorder(null);
+		add(scrollPane);
 	}
 
 	public JGrid getGrid() {
 		if(grid == null) {
 			grid = new JGrid();
 			grid.setModel(getModel());
+			grid.setBorder(null);
 			grid.setSelectionModel(getSelectionModel());
 			grid.setSelectionBorderColor(new Color(43, 58, 88).brighter());
+			grid.setSelectionBackground(new Color(34, 35, 37));
+			grid.setCellBackground(new Color(34, 35, 37));
 			grid.setBackground(new Color(34, 35, 37));
-			grid.getCellRendererManager().setDefaultRenderer(new TunesAlbumGridRenderer());
-			
+//			grid.getCellRendererManager().setDefaultRenderer(new TunesAlbumGridRenderer());
+			grid.getCellRendererManager().setDefaultRenderer(new BetterTunesAlbumGridRenderer());
+
+//			grid.setHorizontalAlignment(SwingConstants.LEFT);
+			grid.setVerticalMargin(12);
+			grid.setHorizonztalMargin(12);
 			try {
 				GestureUtilities.registerListener(grid, new GestureMagnificationListener() {
 
 					@Override
 					public void magnify(GestureMagnificationEvent gestureMagnificationEvent) {
-						int min = 63;
-						int max = 256;
+						int min = 128;
+						int max = 512;
 						int val = grid.getFixedCellDimension();
 //			
+						int diff = (int) ((max - min) * gestureMagnificationEvent.getMagnification());
 						
-						System.out.println(gestureMagnificationEvent.getMagnification());
-						System.out.println((max - min) * gestureMagnificationEvent.getMagnification());
-						
-						grid.setFixedCellDimension((int) (val + (max - min) * gestureMagnificationEvent.getMagnification()));
+						grid.setFixedCellDimension(Math.max(min, Math.min(max, val + diff)));
 					}
 				});
 			} catch (GesturesNotSupportedException e2) {

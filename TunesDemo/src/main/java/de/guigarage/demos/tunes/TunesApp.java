@@ -33,7 +33,7 @@ public class TunesApp extends JFrame {
 	
 	public TunesApp() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("TunesApp");
+		setTitle("GarageTunes");
 		model = new TunesAlbumListModel();
 		selectionModel = new DefaultListSelectionModel();
 		selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
