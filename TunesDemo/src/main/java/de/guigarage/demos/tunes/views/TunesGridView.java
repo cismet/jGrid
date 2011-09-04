@@ -12,6 +12,10 @@ import java.util.List;
 
 import de.guigarage.demos.tunes.TunesApp;
 import de.guigarage.demos.tunes.views.renderer.TunesAlbumGridRenderer;
+import de.guigarage.gestures.GestureMagnificationEvent;
+import de.guigarage.gestures.GestureMagnificationListener;
+import de.guigarage.gestures.GestureUtilities;
+import de.guigarage.gestures.GesturesNotSupportedException;
 import de.jgrid.JGrid;
 
 public class TunesGridView extends AbstractTunesDataView {
@@ -33,6 +37,27 @@ public class TunesGridView extends AbstractTunesDataView {
 			grid.setSelectionBorderColor(new Color(43, 58, 88).brighter());
 			grid.setBackground(new Color(34, 35, 37));
 			grid.getCellRendererManager().setDefaultRenderer(new TunesAlbumGridRenderer());
+			
+			try {
+				GestureUtilities.registerListener(grid, new GestureMagnificationListener() {
+
+					@Override
+					public void magnify(GestureMagnificationEvent gestureMagnificationEvent) {
+						int min = 63;
+						int max = 256;
+						int val = grid.getFixedCellDimension();
+//			
+						
+						System.out.println(gestureMagnificationEvent.getMagnification());
+						System.out.println((max - min) * gestureMagnificationEvent.getMagnification());
+						
+						grid.setFixedCellDimension((int) (val + (max - min) * gestureMagnificationEvent.getMagnification()));
+					}
+				});
+			} catch (GesturesNotSupportedException e2) {
+				e2.printStackTrace();
+			}
+			
 			new DropTarget (grid, new DropTargetAdapter() {
 				
 				@Override

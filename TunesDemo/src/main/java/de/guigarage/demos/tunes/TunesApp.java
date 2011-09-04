@@ -57,7 +57,7 @@ public class TunesApp extends JFrame {
 		bottomPanel.add(new ListViewButton(this));
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		
-		pack();
+		setSize(300, 400);
 	}
 	
 	public void showListView() {

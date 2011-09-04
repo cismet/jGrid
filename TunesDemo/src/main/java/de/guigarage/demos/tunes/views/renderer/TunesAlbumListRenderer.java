@@ -3,6 +3,7 @@ package de.guigarage.demos.tunes.views.renderer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -18,6 +19,7 @@ import javax.swing.ListCellRenderer;
 
 import de.guigarage.demos.tunes.model.TunesAlbum;
 import de.guigarage.demos.tunes.util.TunesUtilities;
+import de.rating.JRating;
 
 public class TunesAlbumListRenderer extends JComponent implements
 		ListCellRenderer {
@@ -30,7 +32,13 @@ public class TunesAlbumListRenderer extends JComponent implements
 	
 	private BufferedImage defaultCover;
 	
+	private JRating ratingView;
+	
 	public TunesAlbumListRenderer() {
+		setLayout(new FlowLayout(FlowLayout.RIGHT));
+		ratingView = new JRating();
+		ratingView.getModel().setMaxCount(5);
+		add(ratingView);
 		try {
 			defaultCover = ImageIO.read(TunesUtilities.load("de/guigarage/demos/tunes/icon/default_cover.png"));
 		} catch (IOException e) {
@@ -43,6 +51,7 @@ public class TunesAlbumListRenderer extends JComponent implements
 			int index, boolean isSelected, boolean cellHasFocus) {
 		if(value != null && value instanceof TunesAlbum) {
 			this.album = (TunesAlbum) value;
+			ratingView.getModel().setMarkCount(this.album.getRating());
 		} else {
 			this.album = null;
 		}
@@ -71,28 +80,17 @@ public class TunesAlbumListRenderer extends JComponent implements
 		
 		//Cover
 		if(album != null && album.getCover() != null) {
-//			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			g2.drawImage(TunesUtilities.getFasterScaledInstance(album.getCover(), 44, 44, RenderingHints.VALUE_INTERPOLATION_BICUBIC, true), 0, 0, null);
 		} else {
-//			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			g2.drawImage(TunesUtilities.getFasterScaledInstance(defaultCover, 44, 44, RenderingHints.VALUE_INTERPOLATION_BICUBIC, true), 0, 0, null);
 		}
-//		g2.setColor(new Color(50, 52, 55, 150));
-//		g2.drawLine(0, 0, 43, 0);
-//		g2.drawLine(0, 43, 43, 43);
-//		g2.drawLine(0, 0, 0, 43);
-//		g2.drawLine(43, 0, 43, 43);
 		
 		g2.setColor(new Color(50, 52, 55, 200));
 		g2.drawLine(0, 0, getWidth(), 0);
 		
 		g2.setColor(new Color(0, 0, 0, 140));
 		g2.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-		
-//		g2.setColor(new Color(5, 5, 5, 180));
-//		g2.drawLine(0, 0, 0, getHeight());
-//		g2.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight());
-		
+
 		g2.setColor(Color.white);
 		g2.setFont(getFont().deriveFont(Font.BOLD));
 		if(album != null) {
@@ -108,6 +106,6 @@ public class TunesAlbumListRenderer extends JComponent implements
 	
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(256, 44);
+		return new Dimension(300, 44);
 	}
 }
