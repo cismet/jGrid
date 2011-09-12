@@ -36,8 +36,8 @@ public class TunesAlbum {
 	
 	private PropertyChangeSupport propertyChangeSupport;
 	
-	public static String awsAccessKeyId = "AKIAIUOB6337I5CIHB7A";
-	public static String awsSecretKey = "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";
+	public static String awsAccessKeyId = "INSERT YOUT CODE";
+	public static String awsSecretKey = "INSERT YOUT CODE";
 	
 	private static ExecutorService coverLoader = Executors.newCachedThreadPool();
 	
