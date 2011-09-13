@@ -29,6 +29,16 @@ import javax.swing.plaf.ComponentUI;
 public abstract class GridUI extends ComponentUI {
 
 	/**
+	 * Returns the indexes of cells that intersect with <code>rect</code>, or an
+	 * empty array if none do
+	 * 
+	 * @param rect
+	 *			the area of interest
+	 * @return array of cell indexes intersected by <code>rect</code>, in ascending order
+	 */
+	public abstract int[] getCellsIntersectedBy(Rectangle rect);
+
+	/**
 	 * Returns the index of the cell that <code>point</code> lies in or -1 if
 	 * <code>point</code> is not in a cell
 	 * 

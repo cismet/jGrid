@@ -22,6 +22,8 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
@@ -318,5 +320,24 @@ public class BasicGridUI extends GridUI {
 	@Override
 	public void markCellBoundsAsDirty() {
 		dirtyCellBounds = true;
+	}
+
+	@Override
+	public int[] getCellsIntersectedBy(Rectangle rect)
+	{
+		Set<Integer> intersectSet = new TreeSet<Integer>();
+		
+		for (Entry<Integer,Rectangle> nextCellBounds : cellBounds.entrySet()) {
+			if (nextCellBounds.getValue().intersects(rect)) {
+				intersectSet.add(nextCellBounds.getKey());
+			}
+		}
+
+		int[] returnArray = new int[intersectSet.size()];
+		int i = 0;
+		for (int nextInt : intersectSet) {
+			returnArray[i++] = nextInt;
+		}
+		return returnArray;
 	}
 }
