@@ -211,7 +211,7 @@ public class BasicGridUI extends GridUI {
 					grid.getFixedCellDimension());
 			x = x + grid.getHorizonztalMargin() + grid.getFixedCellDimension();
 			
-			cellBounds.put(new Integer(i), r);
+			cellBounds.put(Integer.valueOf(i), r);
 		}
 		rowCount = row + 1;
 		dirtyCellBounds = false;
@@ -224,9 +224,9 @@ public class BasicGridUI extends GridUI {
 			
 		for (int i = 0; i < grid.getModel().getSize(); i++) {
 			int leadIndex = adjustIndex(grid.getLeadSelectionIndex(), grid);
-			if (grid.getVisibleRect().intersects(cellBounds.get(new Integer(i)))) {
-				paintCell(g, c, i, cellBounds.get(new Integer(i)), leadIndex);
-				paintCellBorder(g, c, i, cellBounds.get(new Integer(i)), leadIndex);
+			if (grid.getVisibleRect().intersects(cellBounds.get(Integer.valueOf(i)))) {
+				paintCell(g, c, i, cellBounds.get(Integer.valueOf(i)), leadIndex);
+				paintCellBorder(g, c, i, cellBounds.get(Integer.valueOf(i)), leadIndex);
 			}
 		}
 		rendererPane.removeAll();
@@ -273,7 +273,7 @@ public class BasicGridUI extends GridUI {
 	@Override
 	public Rectangle getCellBounds(int index) {
 		maybeUpdateCellBounds();
-		return cellBounds.get(new Integer(index));
+		return cellBounds.get(Integer.valueOf(index));
 	}
 
 	@Override
