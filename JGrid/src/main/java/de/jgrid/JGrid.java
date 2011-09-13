@@ -321,6 +321,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		return (GridUI) ui;
 	}
 
+	@Override
 	public void updateUI() {
 		cellRendererManager.updateRendererUI();
 	}
@@ -410,6 +411,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		return verticalMargin;
 	}
 
+	@Override
 	public String getUIClassID() {
 		return uiClassID;
 	}
@@ -614,6 +616,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		return getUI().getCellAt(point);
 	}
 
+	@Override
 	public String getToolTipText(MouseEvent event) {
 		if (event != null) {
 			Point p = event.getPoint();
