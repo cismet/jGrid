@@ -181,7 +181,7 @@ public class BasicGridUI extends GridUI {
 	private void maybeUpdateCellBounds() {
 		if(dirtyCellBounds) {
 			updateCellBounds();
-			dirtyCellBounds = false;
+			grid.revalidate();
 		}
 	}
 	
