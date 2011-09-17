@@ -134,7 +134,7 @@ public class PicViewerDemo extends JFrame {
 		
 		
 		try {
-			GestureUtilities.add(grid, new GestureMagnificationListener() {
+			GestureUtilities.registerListener(grid, new GestureMagnificationListener() {
 
 //				double magnification = 1.0f;
 
