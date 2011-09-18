@@ -13,7 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 import de.jgrid.demo.util.ImageUtilities;
 import de.jgrid.demo.util.UrlLoader;
 
@@ -40,6 +41,7 @@ public class Coarkboard extends JFrame {
 		model.addElement("sdds");
 		model.addElement("sfdfdds");
 		model.addElement("sdffdss");
+		model.addElement(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
 		
 		JGrid grid = new JGrid(model) {
 			private static final long serialVersionUID = 1L;
@@ -61,15 +63,17 @@ public class Coarkboard extends JFrame {
 		};
 		grid.setOpaque(false);
 		grid.setFixedCellDimension(300);
+		grid.setHorizonztalMargin(4);
+		grid.setVerticalMargin(4);
 		grid.setHorizontalAlignment(SwingConstants.LEFT);
 		grid.getCellRendererManager().addRendererMapping(String.class, new PostItRenderer());
-		
+		grid.getCellRendererManager().addRendererMapping(BufferedImage.class, new PolaroidRenderer());
+
 		JScrollPane scrollPane = new JScrollPane(grid);
 		scrollPane.setBorder(null);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		setSize(800, 600);
 		setLocationRelativeTo(null);
-//		setResizable(false);
 	}
 	
 	public static void main(String[] args) {

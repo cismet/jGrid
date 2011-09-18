@@ -1,4 +1,4 @@
-package de.jgrid.selection;
+package com.guigarage.jgrid.selection;
 
 import java.awt.BorderLayout;
 
@@ -8,7 +8,8 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListDataListener;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 
 public class SelectionDemo extends JFrame {
 

@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid.ui;
+package com.guigarage.jgrid.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,7 +29,8 @@ import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 
 /**
  * A basic L&F implementation of GridUI.  This implementation 

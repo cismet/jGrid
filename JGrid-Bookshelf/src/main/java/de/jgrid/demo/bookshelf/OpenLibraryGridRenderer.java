@@ -25,9 +25,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+import com.guigarage.jgrid.renderer.GridCellRenderer;
+
 import de.jgrid.demo.util.ImageUtilities;
-import de.jgrid.renderer.GridCellRenderer;
 
 public class OpenLibraryGridRenderer extends JComponent implements
 		GridCellRenderer {

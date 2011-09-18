@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid.ui;
+package com.guigarage.jgrid.ui;
 
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
@@ -31,7 +31,8 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 
 /**
  * Handler for all JGrid events. The handler is added to the JGrid by the UI.

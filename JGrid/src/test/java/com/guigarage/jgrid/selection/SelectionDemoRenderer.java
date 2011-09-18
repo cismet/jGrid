@@ -1,9 +1,10 @@
-package de.jgrid.selection;
+package com.guigarage.jgrid.selection;
 
 import java.awt.Component;
 
-import de.jgrid.JGrid;
-import de.jgrid.renderer.DefaultGridCellRenderer;
+import com.guigarage.jgrid.JGrid;
+import com.guigarage.jgrid.renderer.DefaultGridCellRenderer;
+
 
 public class SelectionDemoRenderer extends DefaultGridCellRenderer {
 

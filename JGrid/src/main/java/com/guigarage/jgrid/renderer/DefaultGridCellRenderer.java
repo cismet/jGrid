@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid.renderer;
+package com.guigarage.jgrid.renderer;
 
 import java.awt.Component;
 import java.awt.Rectangle;
@@ -20,7 +20,8 @@ import java.awt.Rectangle;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 
 /**
  * The default CellRenderer for JGrid. Works like DefaultListRenderer.

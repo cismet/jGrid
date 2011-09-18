@@ -1,4 +1,4 @@
-package de.jgrid.ui;
+package com.guigarage.jgrid.ui;
 
 import javax.swing.ListSelectionModel;
 

@@ -11,10 +11,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+import com.guigarage.jgrid.renderer.GridCellRenderer;
+
 import de.jgrid.demo.util.ImageUtilities;
 import de.jgrid.demo.util.UrlLoader;
-import de.jgrid.renderer.GridCellRenderer;
 
 public class PostItRenderer extends JComponent implements GridCellRenderer {
 
@@ -56,6 +57,7 @@ public class PostItRenderer extends JComponent implements GridCellRenderer {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.drawImage(background, 0, 0, null);
+		g2.dispose();
 	}
 	
 }

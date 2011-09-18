@@ -33,7 +33,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 import de.jgrid.demo.util.CoolProgressBarUI;
 
 public class BookshelfDemo extends JFrame {

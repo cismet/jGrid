@@ -40,11 +40,12 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import de.guigarage.gestures.GestureMagnificationEvent;
-import de.guigarage.gestures.GestureMagnificationListener;
-import de.guigarage.gestures.GestureUtilities;
-import de.guigarage.gestures.GesturesNotSupportedException;
-import de.jgrid.JGrid;
+import com.guigarage.gestures.GestureMagnificationEvent;
+import com.guigarage.gestures.GestureMagnificationListener;
+import com.guigarage.gestures.GestureUtilities;
+import com.guigarage.gestures.GesturesNotSupportedException;
+import com.guigarage.jgrid.JGrid;
+
 import de.jgrid.demo.util.CoolProgressBarUI;
 import de.jgrid.demo.util.ImageUtilities;
 import de.jgrid.demo.util.UrlLoader;

@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid;
+package com.guigarage.jgrid;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -34,13 +34,14 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionListener;
 
-import de.jgrid.eventproxies.ListDataProxy;
-import de.jgrid.eventproxies.ListSelectionProxy;
-import de.jgrid.renderer.GridCellRenderer;
-import de.jgrid.renderer.GridCellRendererManager;
-import de.jgrid.ui.BasicGridUI;
-import de.jgrid.ui.GridUI;
-import de.jgrid.ui.MacOsGridUI;
+import com.guigarage.jgrid.eventproxies.ListDataProxy;
+import com.guigarage.jgrid.eventproxies.ListSelectionProxy;
+import com.guigarage.jgrid.renderer.GridCellRenderer;
+import com.guigarage.jgrid.renderer.GridCellRendererManager;
+import com.guigarage.jgrid.ui.BasicGridUI;
+import com.guigarage.jgrid.ui.GridUI;
+import com.guigarage.jgrid.ui.MacOsGridUI;
+
 
 /**
  * A Component that displays a list of Elements in a grid. The Elements stored
@@ -609,7 +610,7 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	 * @param point
 	 *            the pint in the grid
 	 * @return the index of the cell at the point
-	 * @see de.jgrid.ui.BasicGridUI
+	 * @see com.guigarage.jgrid.ui.BasicGridUI
 	 * @since 0.1
 	 */
 	public int getCellAt(Point point) {

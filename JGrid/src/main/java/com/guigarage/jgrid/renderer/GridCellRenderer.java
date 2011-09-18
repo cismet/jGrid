@@ -12,11 +12,12 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid.renderer;
+package com.guigarage.jgrid.renderer;
 
 import java.awt.Component;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 
 /**
  * Works like the <code>ListCellRenderer</code>

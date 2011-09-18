@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid.ui;
+package com.guigarage.jgrid.ui;
 
 import java.awt.Point;
 import java.awt.Rectangle;

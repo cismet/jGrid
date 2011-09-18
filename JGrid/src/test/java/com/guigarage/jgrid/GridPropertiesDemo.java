@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid;
+package com.guigarage.jgrid;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,7 +35,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
 
-import de.jgrid.JGrid;
+import com.guigarage.jgrid.JGrid;
+
 
 public class GridPropertiesDemo extends JFrame {
 

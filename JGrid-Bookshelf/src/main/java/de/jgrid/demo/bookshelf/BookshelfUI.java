@@ -31,8 +31,9 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
+import com.guigarage.jgrid.ui.BasicGridUI;
+
 import de.jgrid.demo.util.UrlLoader;
-import de.jgrid.ui.BasicGridUI;
 
 public class BookshelfUI extends BasicGridUI {
 

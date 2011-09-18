@@ -12,7 +12,7 @@
  *
  * Copyright @2011 Hendrik Ebbers
  */
-package de.jgrid.eventproxies;
+package com.guigarage.jgrid.eventproxies;
 
 import java.util.ArrayList;
 import java.util.List;

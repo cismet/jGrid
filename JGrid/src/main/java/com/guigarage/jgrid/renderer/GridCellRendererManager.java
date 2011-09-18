@@ -1,4 +1,4 @@
-package de.jgrid.renderer;
+package com.guigarage.jgrid.renderer;
 
 import java.awt.Component;
 import java.util.HashMap;

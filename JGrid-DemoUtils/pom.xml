@@ -10,9 +10,11 @@
 	</properties>
   <dependencies>
   	<dependency>
-  		<groupId>de.jgrid</groupId>
+  		<groupId>com.guigarage</groupId>
   		<artifactId>jgrid</artifactId>
   		<version>0.3-SNAPSHOT</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
   	</dependency>
   </dependencies>
   <build>
