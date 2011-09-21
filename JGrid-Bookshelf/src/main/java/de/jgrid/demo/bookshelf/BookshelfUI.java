@@ -76,29 +76,31 @@ public class BookshelfUI extends BasicGridUI {
 			Rectangle bounds, int leadIndex) {
 		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
 		if(isSelected) {
-			bounds.y = bounds.y - 5;
 			Graphics2D g2 = (Graphics2D) g.create();
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			
-			int lightHeight = bounds.height - (bounds.height / 10);
-			int topWidth = (bounds.width / 10);
-			int lightWidth = (bounds.width / 20);
+			Rectangle spotlightRect = new Rectangle(bounds.getLocation(), bounds.getSize());
+			spotlightRect.y = spotlightRect.y - 5;
+			
+			int lightHeight = spotlightRect.height - (spotlightRect.height / 10);
+			int topWidth = (spotlightRect.width / 10);
+			int lightWidth = (spotlightRect.width / 20);
 			
 			Polygon shape = new Polygon();
-			shape.addPoint(bounds.x + (bounds.width / 2) - (topWidth / 2), bounds.y);
-			shape.addPoint(bounds.x + lightWidth, bounds.y + lightHeight);
-			shape.addPoint(bounds.x + bounds.width - lightWidth, bounds.y + lightHeight);
-			shape.addPoint(bounds.x + (bounds.width / 2) + (topWidth / 2), bounds.y);
+			shape.addPoint(spotlightRect.x + (spotlightRect.width / 2) - (topWidth / 2), spotlightRect.y);
+			shape.addPoint(spotlightRect.x + lightWidth, spotlightRect.y + lightHeight);
+			shape.addPoint(spotlightRect.x + spotlightRect.width - lightWidth, spotlightRect.y + lightHeight);
+			shape.addPoint(spotlightRect.x + (spotlightRect.width / 2) + (topWidth / 2), spotlightRect.y);
 			
 			
 
 			g2.setStroke(new BasicStroke(1.5f));
-			g2.setPaint(new GradientPaint(bounds.x, bounds.y, new Color(255, 255, 255, 130), bounds.x, bounds.y + lightHeight, new Color(255, 255, 255, 0)));
+			g2.setPaint(new GradientPaint(spotlightRect.x, spotlightRect.y, new Color(255, 255, 255, 130), spotlightRect.x, spotlightRect.y - 5 + lightHeight, new Color(255, 255, 255, 0)));
 			g2.fill(shape);
 			g2.draw(shape);
 			
-			RadialGradientPaint radialGradient = new RadialGradientPaint(new Point(bounds.x + (bounds.width / 2),bounds.y), lightHeight / 2, new float[]{0.0f, 1.0f}, new Color[]{new Color(255, 255, 255), new Color(255, 255, 255, 0)});
+			RadialGradientPaint radialGradient = new RadialGradientPaint(new Point(spotlightRect.x + (spotlightRect.width / 2),spotlightRect.y), lightHeight / 2, new float[]{0.0f, 1.0f}, new Color[]{new Color(255, 255, 255), new Color(255, 255, 255, 0)});
 			g2.setPaint(radialGradient);
 			g2.fill(shape);
 			
@@ -106,25 +108,4 @@ public class BookshelfUI extends BasicGridUI {
 		}
 	}
 	
-//	protected void paintCell(Graphics g, JComponent c, int index,
-//			Rectangle bounds, int leadIndex) {
-//		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
-//		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
-//
-//		Graphics2D g2 = (Graphics2D) g.create();
-//		if (isDebugMode()) {
-//			g2.setColor(Color.blue);
-//			g2.fillRect(0, 0, bounds.width, bounds.height);
-//		}
-//		Object value = grid.getModel().getElementAt(index);
-//
-//		Component rendererComponent = grid.getCellRenderer(index)
-//				.getGridCellRendererComponent(grid, value, index, isSelected,
-//						cellHasFocus);
-//		getRendererPane().add(rendererComponent);
-//		getRendererPane().paintComponent(g2, rendererComponent, grid, bounds.x, bounds.y,
-//				bounds.width, bounds.height, true);
-//
-//		g2.dispose();
-//	}
 }
