@@ -59,6 +59,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	public void intervalAdded(ListDataEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: Alles unterhalb des neuen Index repainten
+		// Repaint everything below the new index.
 		grid.repaint();
 	}
 
@@ -66,6 +67,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	public void intervalRemoved(ListDataEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: Alles unterhalb des gelöschten Index repainten
+		// Repaint everything below the deleted index.
 		grid.repaint();
 	}
 
@@ -73,6 +75,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	public void contentsChanged(ListDataEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: nur geänderte Indexes repainten
+		// Repaint only the modified index.
 		grid.repaint();
 	}
 
@@ -80,6 +83,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	public void valueChanged(ListSelectionEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: nur selektion repainten
+		// Only repaint the selection.
 		grid.repaint();
 	}
 
