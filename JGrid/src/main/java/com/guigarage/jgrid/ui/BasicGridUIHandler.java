@@ -14,6 +14,7 @@
  */
 package com.guigarage.jgrid.ui;
 
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -79,7 +80,11 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		// repaint all from index0 to index1
 		for (int i = e.getIndex0(); i <= e.getIndex1(); i++)
 		{
-			grid.repaint(grid.getCellBounds(i));
+			Rectangle cellBounds = grid.getCellBounds(i);
+			if (cellBounds != null)
+			{
+				grid.repaint();
+			}
 		}
 	}
 
@@ -90,7 +95,11 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		// Only repaint the selection.
 		for (int i = e.getFirstIndex(); i <= e.getLastIndex(); i++)
 		{
-			grid.repaint(grid.getCellBounds(i));
+			Rectangle cellBounds = grid.getCellBounds(i);
+			if (cellBounds != null)
+			{
+				grid.repaint();
+			}
 		}
 	}
 
