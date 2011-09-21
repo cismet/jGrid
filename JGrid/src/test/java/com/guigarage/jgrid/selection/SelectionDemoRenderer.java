@@ -5,7 +5,6 @@ import java.awt.Component;
 import com.guigarage.jgrid.JGrid;
 import com.guigarage.jgrid.renderer.DefaultGridCellRenderer;
 
-
 public class SelectionDemoRenderer extends DefaultGridCellRenderer {
 
 	private static final long serialVersionUID = 1L;
@@ -13,6 +12,7 @@ public class SelectionDemoRenderer extends DefaultGridCellRenderer {
 	@Override
 	public Component getGridCellRendererComponent(JGrid grid, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
+		Component ret = super.getGridCellRendererComponent(grid, value, index, isSelected, cellHasFocus);
 		setText("");
 		if(isSelected) {
 			if(grid.getSelectionModel().getLeadSelectionIndex() == index) {
@@ -22,7 +22,6 @@ public class SelectionDemoRenderer extends DefaultGridCellRenderer {
 			} 
 				setText(getText() + "S");
 		}
-		return this;
+		return ret;
 	}
-
 }
