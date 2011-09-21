@@ -5,6 +5,30 @@
 	<artifactId>jgrid</artifactId>
 	<version>0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	<name>JGrid</name>
+	<description>Grid based component for java swing</description>
+	<url>http://www.guigarage.com</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>https://code.google.com/p/jgrid/source/browse/</url>
+		<connection>https://jgrid.googlecode.com/svn/</connection>
+	</scm>
+	<developers>
+		<developer>
+			<name>Hendrik Ebbers</name>
+			<email>hendrik.ebbers@web.de</email>
+			<roles>
+				<role>owner</role>
+			</roles>
+			<url>www.guigarage.com</url>
+		</developer>
+	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -44,5 +68,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</build>	
+	</build>
 </project>
