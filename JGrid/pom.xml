@@ -1,5 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.guigarage</groupId>
 	<artifactId>jgrid</artifactId>
@@ -16,8 +21,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>https://code.google.com/p/jgrid/source/browse/</url>
-		<connection>https://jgrid.googlecode.com/svn/</connection>
+		<url>http://jgrid.googlecode.com/svn/trunk/JGrid/</url>
+		<connection>http://jgrid.googlecode.com/svn/trunk/JGrid/</connection>
+		<developerConnection>https://jgrid.googlecode.com/svn/trunk/JGrid/</developerConnection>
 	</scm>
 	<developers>
 		<developer>
