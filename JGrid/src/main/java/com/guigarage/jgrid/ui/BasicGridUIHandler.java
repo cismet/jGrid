@@ -76,7 +76,11 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: nur geänderte Indexes repainten
 		// Repaint only the modified index.
-		grid.repaint();
+		// repaint all from index0 to index1
+		for (int i = e.getIndex0(); i <= e.getIndex1(); i++)
+		{
+			grid.repaint(grid.getCellBounds(i));
+		}
 	}
 
 	@Override
@@ -84,7 +88,10 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		grid.getUI().markCellBoundsAsDirty();
 		// TODO: nur selektion repainten
 		// Only repaint the selection.
-		grid.repaint();
+		for (int i = e.getFirstIndex(); i <= e.getLastIndex(); i++)
+		{
+			grid.repaint(grid.getCellBounds(i));
+		}
 	}
 
 	@Override

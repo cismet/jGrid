@@ -46,7 +46,7 @@ public class BasicGridUI extends GridUI {
 	private Map<Integer, Rectangle> cellBounds;
 	private BasicGridUIHandler handler;
 	private CellRendererPane rendererPane;
-	private boolean dirtyCellBounds;
+	private boolean dirtyCellBounds = true;
 	
 	@Override
 	public void installUI(JComponent c) {
@@ -55,7 +55,6 @@ public class BasicGridUI extends GridUI {
 			grid = (JGrid) c;
 		}
 		cellBounds = new HashMap<Integer, Rectangle>();
-		dirtyCellBounds = true;
 
 		rendererPane = new CellRendererPane();
 		grid.add(rendererPane);
@@ -225,11 +224,11 @@ public class BasicGridUI extends GridUI {
 			
 		for (int i = 0; i < grid.getModel().getSize(); i++) {
 			int leadIndex = adjustIndex(grid.getLeadSelectionIndex(), grid);
-			if (grid.getVisibleRect().intersects(cellBounds.get(Integer.valueOf(i)))) {
-				paintCell(g, c, i, cellBounds.get(Integer.valueOf(i)), leadIndex);
-				paintCellBorder(g, c, i, cellBounds.get(Integer.valueOf(i)), leadIndex);
+			if (g.getClipBounds().intersects(cellBounds.get(Integer.valueOf(i)))) {				
+					paintCell(g, c, i, cellBounds.get(Integer.valueOf(i)), leadIndex);
+					paintCellBorder(g, c, i, cellBounds.get(Integer.valueOf(i)), leadIndex);
+				}
 			}
-		}
 		rendererPane.removeAll();
 	}
 
@@ -259,6 +258,7 @@ public class BasicGridUI extends GridUI {
      */ 
 	protected void paintCell(Graphics g, JComponent c, int index,
 			Rectangle bounds, int leadIndex) {
+		
 		boolean cellHasFocus = grid.hasFocus() && (index == leadIndex);
 		boolean isSelected = grid.getSelectionModel().isSelectedIndex(index);
 	
@@ -320,7 +320,7 @@ public class BasicGridUI extends GridUI {
 
 	@Override
 	public void markCellBoundsAsDirty() {
-		dirtyCellBounds = true;
+		dirtyCellBounds = true;		
 	}
 
 	@Override
