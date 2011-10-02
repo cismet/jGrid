@@ -9,9 +9,9 @@
 	<groupId>com.guigarage</groupId>
 	<artifactId>jgrid</artifactId>
 	<version>0.3-SNAPSHOT</version>
-	<packaging>jar</packaging>
 	<name>JGrid</name>
 	<description>Grid based component for java swing</description>
+	<packaging>jar</packaging>
 	<url>http://www.guigarage.com</url>
 	<licenses>
 		<license>
@@ -20,12 +20,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<scm>
-		<url>http://jgrid.googlecode.com/svn/trunk/JGrid/</url>
-		<connection>http://jgrid.googlecode.com/svn/trunk/JGrid/</connection>
-		<developerConnection>https://jgrid.googlecode.com/svn/trunk/JGrid/</developerConnection>
-	</scm>
-
 	<developers>
 		<developer>
 			<name>Hendrik Ebbers</name>
@@ -36,15 +30,31 @@
 			<url>www.guigarage.com</url>
 		</developer>
 	</developers>
+	<scm>
+		<url>http://jgrid.googlecode.com/svn/trunk/JGrid/</url>
+		<connection>http://jgrid.googlecode.com/svn/trunk/JGrid/</connection>
+		<developerConnection>https://jgrid.googlecode.com/svn/trunk/JGrid/</developerConnection>
+	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<build>
 		<plugins>
+		<plugin>
+				<groupId>maven</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.4.1</version>
+				<configuration>
+					<connectionType>developerConnection</connectionType>
+					<username>${google.code.username}</username>
+					<password>${google.code.password}</password>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -53,6 +63,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<quiet>true</quiet>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-doc</id>
@@ -65,6 +79,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -87,6 +102,24 @@
 			</activation>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.3.1</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<keystore>${keystore.path}</keystore>
+							<alias>guigarage.com</alias>
+							<storepass>${keystore.store.password}</storepass>
+							<keypass>${keystore.key.password}</keypass>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
