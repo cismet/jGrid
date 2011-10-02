@@ -31,9 +31,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>http://jgrid.googlecode.com/svn/trunk/JGrid/</url>
-		<connection>http://jgrid.googlecode.com/svn/trunk/JGrid/</connection>
-		<developerConnection>https://jgrid.googlecode.com/svn/trunk/JGrid/</developerConnection>
+		<url>http://jgrid.googlecode.com/svn/trunk/</url>
+		<connection>http://jgrid.googlecode.com/svn/trunk/</connection>
+		<developerConnection>https://jgrid.googlecode.com/svn/trunk/</developerConnection>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
