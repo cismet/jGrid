@@ -746,4 +746,33 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	public int getRowForIndex(int index) {
 		return getUI().getRowForIndex(index);
 	}
+	
+	/**
+	 * Set the defaultRenderer. If no renderer is registered for a specific class the <code>defaultRenderer</code> will be used.
+	 * @param defaultRenderer the new defaultRenderer
+	 */
+	public void setDefaultRenderer(GridCellRenderer defaultRenderer) {
+		cellRendererManager.setDefaultRenderer(defaultRenderer);
+	}
+
+	/**
+	 * Returns the defaultRenderer. If no renderer is registered for a specific class the <code>defaultRenderer</code> will be used.
+	 * @return the defaultRenderer
+	 */
+	public GridCellRenderer getDefaultRenderer() {
+		return cellRendererManager.getDefaultRenderer();
+	}
+	
+	/**
+	 * Adds a renderer to the handler. The renderer is the default renderer for
+	 * the cellClass <code>cls</code>
+	 * 
+	 * @param cls
+	 *            set the renderer for this class
+	 * @param renderer
+	 *            the renderer for all instances of <code>cls</code>
+	 */
+	public void addRendererMapping(Class<?> cls, GridCellRenderer renderer) {
+		cellRendererManager.addRendererMapping(cls, renderer);
+	}
 }
