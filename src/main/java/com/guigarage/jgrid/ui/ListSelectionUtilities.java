@@ -2,11 +2,21 @@ package com.guigarage.jgrid.ui;
 
 import javax.swing.ListSelectionModel;
 
-public class GridSelectionUtilities {
+public class ListSelectionUtilities {
 
-	private GridSelectionUtilities() {}
+	private ListSelectionUtilities() {}
 	
-	public static void checkForSurroundingSelections(ListSelectionModel selectionModel, int maxIndex) {
+	/**
+	 * Updates the anchor and lead of the given SelectionModel. The complete selection of the model will bordered by anchor and lead.
+	 * Examples:
+	 * If your list selection looks like "---L**A**---" (- not selected / A anchor / L lead / * selected) the method will transform the selection to "---L****A---"
+	 * If your list selection looks like "---A**L**---" the method will transform the selection to "---A****L---"
+	 * If your list selection looks like "--A**--L**--" the method will transform the selection to "--A**--**L--"
+	 * If your list selection looks like "*-**L--*A*-*" the method will transform the selection to "L-***--***-A"
+	 * @param selectionModel the SelectionModel being updated
+	 * @param maxIndex the max index of the data model
+	 */
+	public static void refreshAnchorAndLead(ListSelectionModel selectionModel, int maxIndex) {
 		if(selectionModel.getAnchorSelectionIndex() > selectionModel.getLeadSelectionIndex()) {
 			int nextCheckIndex = selectionModel.getLeadSelectionIndex() - 1;
 			while(selectionModel.isSelectedIndex(nextCheckIndex) && nextCheckIndex >= 0) {

@@ -59,24 +59,20 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	@Override
 	public void intervalAdded(ListDataEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
-		// TODO: Alles unterhalb des neuen Index repainten
-		// Repaint everything below the new index.
+		// TODO: Repaint everything below the new index.
 		grid.repaint();
 	}
 
 	@Override
 	public void intervalRemoved(ListDataEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
-		// TODO: Alles unterhalb des gelöschten Index repainten
-		// Repaint everything below the deleted index.
+		// TODO: Repaint everything below the deleted index.
 		grid.repaint();
 	}
 
 	@Override
 	public void contentsChanged(ListDataEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
-		// TODO: nur geänderte Indexes repainten
-		// Repaint only the modified index.
 		// repaint all from index0 to index1
 		for (int i = e.getIndex0(); i <= e.getIndex1(); i++)
 		{
@@ -91,7 +87,6 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
-		// TODO: nur selektion repainten
 		// Only repaint the selection.
 		for (int i = e.getFirstIndex(); i <= e.getLastIndex(); i++)
 		{
@@ -116,7 +111,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() - 1;
 			if (e.isShiftDown()) {
-				if (!GridSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), nextIndex) && nextIndex >= 0) {
+				if (!ListSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), nextIndex) && nextIndex >= 0) {
 					while(grid.getSelectionModel().isSelectedIndex(nextIndex) && nextIndex > 0) {
 						nextIndex--;
 					}
@@ -140,7 +135,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			int nextIndex = grid.getSelectionModel().getLeadSelectionIndex() + 1;
 			if (e.isShiftDown()) {
-				if (!GridSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), nextIndex) && nextIndex < grid.getModel().getSize()) {
+				if (!ListSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), nextIndex) && nextIndex < grid.getModel().getSize()) {
 					while(grid.getSelectionModel().isSelectedIndex(nextIndex) && nextIndex < grid.getModel().getSize() - 1) {
 						nextIndex++;
 					}
@@ -192,7 +187,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 				grid.setSelectedIndex(Math.max(0, nextIndex));
 			}
 		}
-		GridSelectionUtilities.checkForSurroundingSelections(grid.getSelectionModel(), grid.getModel().getSize() - 1);
+		ListSelectionUtilities.refreshAnchorAndLead(grid.getSelectionModel(), grid.getModel().getSize() - 1);
 	}
 
 	@Override
@@ -215,14 +210,14 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 						.getAnchorSelectionIndex();
 				int lead = grid.getSelectionModel().getLeadSelectionIndex();
 
-				if (GridSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), index)) {
+				if (ListSelectionUtilities.isBetweenOrEqualsLeadAndAncestor(grid.getSelectionModel(), index)) {
 					grid.getSelectionModel().removeSelectionInterval(lead,
 							index);
 
 					grid.getSelectionModel().addSelectionInterval(index, index);
 					grid.getSelectionModel().setLeadSelectionIndex(index);
 				} else {
-					if (!GridSelectionUtilities.isOnSameSideFromAncestorAsLead(grid.getSelectionModel(), index)) {
+					if (!ListSelectionUtilities.isOnSameSideFromAncestorAsLead(grid.getSelectionModel(), index)) {
 						grid.getSelectionModel().removeSelectionInterval(
 								ancestor, lead);
 						grid.getSelectionModel().addSelectionInterval(ancestor,
@@ -238,9 +233,7 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 			}
 
 		}
-		GridSelectionUtilities.checkForSurroundingSelections(grid.getSelectionModel(), grid.getModel().getSize() - 1);
-		// TODO: Wenn selection nicht sichtbar View anpassen (gehört das hier
-		// hin???)
+		ListSelectionUtilities.refreshAnchorAndLead(grid.getSelectionModel(), grid.getModel().getSize() - 1);
 	}
 
 	@Override
