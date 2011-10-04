@@ -42,9 +42,9 @@
 	<build>
 		<plugins>
 		<plugin>
-				<groupId>maven</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.4.1</version>
+				<version>1.4</version>
 				<configuration>
 					<connectionType>developerConnection</connectionType>
 					<username>${google.code.username}</username>
