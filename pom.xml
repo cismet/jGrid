@@ -1,18 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.cismet.cids</groupId>
+        <artifactId>cids-parent</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+    
 	<groupId>com.guigarage</groupId>
 	<artifactId>jgrid</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.4-SNAPSHOT</version>
+        
 	<name>JGrid</name>
 	<description>Grid based component for java swing</description>
-	<packaging>jar</packaging>
-	<url>http://www.guigarage.com</url>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -21,121 +22,57 @@
 		</license>
 	</licenses>
 	<developers>
+                <developer>
+			<organization>cismet</organization>
+			<email>info@cismet.de</email>
+			<roles>
+				<role>owner</role>
+			</roles>
+			<url>www.cismet.de</url>
+		</developer>
 		<developer>
 			<name>Hendrik Ebbers</name>
 			<email>hendrik.ebbers@web.de</email>
 			<roles>
-				<role>owner</role>
+				<role>created project</role>
 			</roles>
 			<url>www.guigarage.com</url>
 		</developer>
 	</developers>
+        
+        <prerequisites>
+            <maven>3</maven>
+        </prerequisites>        
+        
 	<scm>
-		<url>http://jgrid.googlecode.com/svn/trunk/</url>
-		<connection>http://jgrid.googlecode.com/svn/trunk/</connection>
-		<developerConnection>https://jgrid.googlecode.com/svn/trunk/</developerConnection>
+		<connection>https://github.com/cismet/jGrid.git</connection>
+		<developerConnection>scm:git:git@github.com:cismet/jGrid.git</developerConnection>
+		<url>https://github.com/cismet/jGrid</url>
 	</scm>
+        
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	<build>
-		<plugins>
-		<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.5</version>
-				<configuration>
-					<connectionType>developerConnection</connectionType>
-					<username>${google.code.username}</username>
-					<password>${google.code.password}</password>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<quiet>true</quiet>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-doc</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>2.3.1</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<keystore>${keystore.path}</keystore>
-							<alias>guigarage.com</alias>
-							<storepass>${keystore.store.password}</storepass>
-							<keypass>${keystore.key.password}</keypass>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+        
+        <repositories>
+        <repository>
+            <id>cismet-repo</id>
+            <url>https://repo.cismet.de/repo</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>interval:60</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+        
+    <build>
+        <finalName>jGrid</finalName>
+    </build>
 </project>
