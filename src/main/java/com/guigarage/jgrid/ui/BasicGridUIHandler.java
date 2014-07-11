@@ -33,6 +33,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.guigarage.jgrid.JGrid;
+import java.awt.Point;
+import java.awt.event.MouseMotionListener;
 
 
 /**
@@ -42,7 +44,7 @@ import com.guigarage.jgrid.JGrid;
  */
 public class BasicGridUIHandler implements PropertyChangeListener,
 		MouseListener, KeyListener, ListSelectionListener, ListDataListener,
-		ComponentListener {
+		ComponentListener, MouseMotionListener {
 
 	private JGrid grid;
 
@@ -246,11 +248,44 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-	}
+	    Point anchor = e.getPoint();
+            grid.setSelectionRectangleAnchor(anchor);
+         grid.setSelectionRectangle(new Rectangle(anchor));        
+        }
+        
+            @Override
+    public void mouseDragged(MouseEvent e) {
+        Rectangle selection = grid.getSelectionRectangle();
+        Point anchor = grid.getSelectionRectangleAnchor();
+        selection.setBounds((int) Math.min(anchor.x, e.getX()), (int) Math.min(anchor.y, e.getY()),
+                (int) Math.abs(e.getX() - anchor.x), (int) Math.abs(e.getY() - anchor.y));
+        grid.repaint();
+    }
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-	}
+	        Rectangle selection = grid.getSelectionRectangle();
+        if (!isMenuShortcutKeyDown(e)) {
+            grid.getSelectionModel().clearSelection();
+        }
+        int[] indexes = grid.getCellsIntersectedBy(selection);
+        if (indexes.length > 0) {
+            grid.requestFocus();
+            for (int i : indexes) {
+                grid.getSelectionModel().addSelectionInterval(i, i);
+            }
+        }
+
+        ListSelectionUtilities.refreshAnchorAndLead(grid.getSelectionModel(), grid.getModel().getSize() - 1);
+
+        grid.setSelectionRectangle(null);
+        grid.repaint();
+        }
+        
+            @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -289,4 +324,5 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 	public void componentHidden(ComponentEvent e) {
 		grid.getUI().markCellBoundsAsDirty();
 	}
+
 }
