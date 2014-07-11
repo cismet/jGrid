@@ -30,6 +30,8 @@ import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
 import com.guigarage.jgrid.JGrid;
+import java.awt.BasicStroke;
+import java.awt.Stroke;
 
 
 /**
@@ -61,6 +63,7 @@ public class BasicGridUI extends GridUI {
 
 		handler = new BasicGridUIHandler(grid);
 		grid.addMouseListener(handler);
+                grid.addMouseMotionListener(handler);
 		grid.addComponentListener(handler);
 		grid.addKeyListener(handler);
 		grid.addListDataListener(handler);
@@ -72,6 +75,7 @@ public class BasicGridUI extends GridUI {
 	public void uninstallUI(JComponent c) {
 		grid.remove(rendererPane);
 		grid.removeMouseListener(handler);
+                grid.removeMouseMotionListener(handler);
 		grid.removeComponentListener(handler);
 		grid.removeKeyListener(handler);
 		grid.removeListDataListener(handler);
@@ -341,4 +345,6 @@ public class BasicGridUI extends GridUI {
 		}
 		return returnArray;
 	}
+        
+        
 }
