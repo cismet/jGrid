@@ -1,3 +1,10 @@
+/***************************************************
+*
+* cismet GmbH, Saarbruecken, Germany
+*
+*              ... and it just works.
+*
+****************************************************/
 /*
  * Created on July 20, 2011
  *
@@ -21,59 +28,67 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 /**
- * Proxyclass for ListDataListeners. All ListDataEvent posted to an instance will transmited to the ListDataListeners registered at the proxy.
- * @author hendrikebbers
+ * Proxyclass for ListDataListeners. All ListDataEvent posted to an instance will transmited to the ListDataListeners
+ * registered at the proxy.
  *
+ * @author   hendrikebbers
+ * @version  $Revision$, $Date$
  */
 public class ListDataProxy implements ListDataListener {
 
-	private List<ListDataListener> listenerList;
-	
-	/**
-	 * Registers a ListDataListener to the proxy
-	 * @param l the ListDataListener to register
-	 */
-	public void addListDataListener(ListDataListener l) {
-		if(listenerList == null) {
-			listenerList = new ArrayList<ListDataListener>();
-		}
-		listenerList.add(l);
-	}
-	
-	/**
-	 * Deregisters a ListDataListener to the proxy
-	 * @param l the ListDataListener to deregister
-	 */
-	public void removeListDataListener(ListDataListener l) {
-		if(listenerList != null) {
-			listenerList.add(l);
-		}
-	}
-	
-	@Override
-	public void intervalAdded(ListDataEvent e) {
-		if(listenerList != null) {
-			for (ListDataListener listener: listenerList) {
-				listener.intervalAdded(e);
-			}
-		}
-	}
+    //~ Instance fields --------------------------------------------------------
 
-	@Override
-	public void intervalRemoved(ListDataEvent e) {
-		if(listenerList != null) {
-			for (ListDataListener listener: listenerList) {
-				listener.intervalRemoved(e);
-			}
-		}
-	}
+    private List<ListDataListener> listenerList;
 
-	@Override
-	public void contentsChanged(ListDataEvent e) {
-		if(listenerList != null) {
-			for (ListDataListener listener: listenerList) {
-				listener.contentsChanged(e);
-			}
-		}
-	}
+    //~ Methods ----------------------------------------------------------------
+
+    /**
+     * Registers a ListDataListener to the proxy.
+     *
+     * @param  l  the ListDataListener to register
+     */
+    public void addListDataListener(final ListDataListener l) {
+        if (listenerList == null) {
+            listenerList = new ArrayList<ListDataListener>();
+        }
+        listenerList.add(l);
+    }
+
+    /**
+     * Deregisters a ListDataListener to the proxy.
+     *
+     * @param  l  the ListDataListener to deregister
+     */
+    public void removeListDataListener(final ListDataListener l) {
+        if (listenerList != null) {
+            listenerList.add(l);
+        }
+    }
+
+    @Override
+    public void intervalAdded(final ListDataEvent e) {
+        if (listenerList != null) {
+            for (final ListDataListener listener : listenerList) {
+                listener.intervalAdded(e);
+            }
+        }
+    }
+
+    @Override
+    public void intervalRemoved(final ListDataEvent e) {
+        if (listenerList != null) {
+            for (final ListDataListener listener : listenerList) {
+                listener.intervalRemoved(e);
+            }
+        }
+    }
+
+    @Override
+    public void contentsChanged(final ListDataEvent e) {
+        if (listenerList != null) {
+            for (final ListDataListener listener : listenerList) {
+                listener.contentsChanged(e);
+            }
+        }
+    }
 }

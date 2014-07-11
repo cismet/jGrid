@@ -1,3 +1,10 @@
+/***************************************************
+*
+* cismet GmbH, Saarbruecken, Germany
+*
+*              ... and it just works.
+*
+****************************************************/
 /*
  * Created on July 20, 2011
  *
@@ -21,42 +28,49 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * Proxyclass for ListSelectionListeners. All ListSelectionEvents posted to an instance will transmited to the ListSelectionListeners registered at the proxy.
- * @author hendrikebbers
+ * Proxyclass for ListSelectionListeners. All ListSelectionEvents posted to an instance will transmited to the
+ * ListSelectionListeners registered at the proxy.
  *
+ * @author   hendrikebbers
+ * @version  $Revision$, $Date$
  */
 public class ListSelectionProxy implements ListSelectionListener {
 
-	private List<ListSelectionListener> listenerList;
-	
-	/**
-	 * Registers a ListSelectionListener to the proxy
-	 * @param l the ListSelectionListener to register
-	 */
-	public void addListSelectionListener(ListSelectionListener l) {
-		if(listenerList == null) {
-			listenerList = new ArrayList<ListSelectionListener>();
-		}
-		listenerList.add(l);
-	}
-	
-	/**
-	 * Deregisters a ListSelectionListener to the proxy
-	 * @param l the ListSelectionListener to deregister
-	 */
-	public void removeListSelectionListener(ListSelectionListener l) {
-		if(listenerList != null) {
-			listenerList.add(l);
-		}
-	}
-	
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		if(listenerList != null) {
-			for (ListSelectionListener listener: listenerList) {
-				listener.valueChanged(e);
-			}
-		}
-	}
+    //~ Instance fields --------------------------------------------------------
 
+    private List<ListSelectionListener> listenerList;
+
+    //~ Methods ----------------------------------------------------------------
+
+    /**
+     * Registers a ListSelectionListener to the proxy.
+     *
+     * @param  l  the ListSelectionListener to register
+     */
+    public void addListSelectionListener(final ListSelectionListener l) {
+        if (listenerList == null) {
+            listenerList = new ArrayList<ListSelectionListener>();
+        }
+        listenerList.add(l);
+    }
+
+    /**
+     * Deregisters a ListSelectionListener to the proxy.
+     *
+     * @param  l  the ListSelectionListener to deregister
+     */
+    public void removeListSelectionListener(final ListSelectionListener l) {
+        if (listenerList != null) {
+            listenerList.add(l);
+        }
+    }
+
+    @Override
+    public void valueChanged(final ListSelectionEvent e) {
+        if (listenerList != null) {
+            for (final ListSelectionListener listener : listenerList) {
+                listener.valueChanged(e);
+            }
+        }
+    }
 }
