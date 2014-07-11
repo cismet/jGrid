@@ -41,6 +41,9 @@ import com.guigarage.jgrid.renderer.GridCellRendererManager;
 import com.guigarage.jgrid.ui.BasicGridUI;
 import com.guigarage.jgrid.ui.GridUI;
 import com.guigarage.jgrid.ui.MacOsGridUI;
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 
 /**
@@ -69,6 +72,8 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	private int horizontalAlignment = CENTER;
 	private ListSelectionProxy selectionProxy = new ListSelectionProxy();;
 	private ListDataProxy dataProxy = new ListDataProxy();
+        private   Rectangle selectionRectangle;
+        private Point selectionRectangleAnchor;
 
 	private static final String uiClassID = "GridUI";
 
@@ -167,6 +172,27 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 		dataProxy.addListDataListener(l);
 	}
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (selectionRectangle != null) {
+            Graphics2D g2 = (Graphics2D) g;
+
+            g2.setColor(this.getSelectionBackground());
+            g2.setStroke(new BasicStroke(3));
+            g2.draw(selectionRectangle);
+
+            g2.setColor(this.getSelectionBorderColor());
+            g2.setStroke(new BasicStroke(1));
+            g2.draw(selectionRectangle);
+            
+            g2.setColor(new Color(selectionBorderColor.getRed(), selectionBorderColor.getGreen(), selectionBorderColor.getBlue(), 128));
+            g2.fill(selectionRectangle);
+        }
+    }
+
+        
+        
 	/**
      * Sets the {@code ListSelectionModel} of the JGrid
      * @param selectionModel the new {@code ListSelectionModel}
@@ -616,6 +642,10 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	public int getCellAt(Point point) {
 		return getUI().getCellAt(point);
 	}
+        
+        public int[] getCellsIntersectedBy(Rectangle rectangle){
+            return getUI().getCellsIntersectedBy(rectangle);
+        }
 
 	@Override
 	public String getToolTipText(MouseEvent event) {
@@ -746,7 +776,23 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
 	public int getRowForIndex(int index) {
 		return getUI().getRowForIndex(index);
 	}
-	
+
+    public Rectangle getSelectionRectangle() {
+        return selectionRectangle;
+    }
+
+    public void setSelectionRectangle(Rectangle selectionRectangle) {
+        this.selectionRectangle = selectionRectangle;
+    }
+
+    public Point getSelectionRectangleAnchor() {
+        return selectionRectangleAnchor;
+    }
+
+    public void setSelectionRectangleAnchor(Point selectionRectangleAnchor) {
+        this.selectionRectangleAnchor = selectionRectangleAnchor;
+    }
+
 	/**
 	 * Set the defaultRenderer. If no renderer is registered for a specific class the <code>defaultRenderer</code> will be used.
 	 * @param defaultRenderer the new defaultRenderer
