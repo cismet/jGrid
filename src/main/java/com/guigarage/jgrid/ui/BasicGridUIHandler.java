@@ -247,6 +247,8 @@ public class BasicGridUIHandler implements PropertyChangeListener,
                 }
                 grid.getSelectionModel().setAnchorSelectionIndex(ancestor);
             } else {
+                // clear selection to provoke a selection changed event
+                grid.getSelectionModel().clearSelection();
                 grid.setSelectedIndex(index);
             }
         }
@@ -270,21 +272,17 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
     @Override
     public void mouseDragged(final MouseEvent e) {
+        if (!isMenuShortcutKeyDown(e)) {
+            grid.getSelectionModel().clearSelection();
+        }
+
         final Rectangle selection = grid.getSelectionRectangle();
         final Point anchor = grid.getSelectionRectangleAnchor();
         selection.setBounds((int)Math.min(anchor.x, e.getX()),
             (int)Math.min(anchor.y, e.getY()),
             (int)Math.abs(e.getX() - anchor.x),
             (int)Math.abs(e.getY() - anchor.y));
-        grid.repaint();
-    }
 
-    @Override
-    public void mouseReleased(final MouseEvent e) {
-        final Rectangle selection = grid.getSelectionRectangle();
-        if (!isMenuShortcutKeyDown(e)) {
-            grid.getSelectionModel().clearSelection();
-        }
         final int[] indexes = grid.getCellsIntersectedBy(selection);
         if (indexes.length > 0) {
             grid.requestFocus();
@@ -295,6 +293,11 @@ public class BasicGridUIHandler implements PropertyChangeListener,
 
         ListSelectionUtilities.refreshAnchorAndLead(grid.getSelectionModel(), grid.getModel().getSize() - 1);
 
+        grid.repaint();
+    }
+
+    @Override
+    public void mouseReleased(final MouseEvent e) {
         grid.setSelectionRectangle(null);
         grid.repaint();
     }
