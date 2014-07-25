@@ -39,6 +39,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComponent;
@@ -353,6 +357,69 @@ public class JGrid extends JComponent implements Scrollable, SwingConstants {
      */
     public int getLeadSelectionIndex() {
         return getSelectionModel().getLeadSelectionIndex();
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    public int[] getSelectedIndices() {
+        final ListSelectionModel sm = getSelectionModel();
+        final int iMin = sm.getMinSelectionIndex();
+        final int iMax = sm.getMaxSelectionIndex();
+
+        if ((iMin < 0) || (iMax < 0)) {
+            return new int[0];
+        }
+
+        final int[] rvTmp = new int[1 + (iMax - iMin)];
+        int n = 0;
+        for (int i = iMin; i <= iMax; i++) {
+            if (sm.isSelectedIndex(i)) {
+                rvTmp[n++] = i;
+            }
+        }
+        final int[] rv = new int[n];
+        System.arraycopy(rvTmp, 0, rv, 0, n);
+        return rv;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    public List getSelectedValuesList() {
+        final ListSelectionModel sm = getSelectionModel();
+        final ListModel dm = getModel();
+
+        final int iMin = sm.getMinSelectionIndex();
+        final int iMax = sm.getMaxSelectionIndex();
+
+        if ((iMin < 0) || (iMax < 0)) {
+            return Collections.emptyList();
+        }
+
+        final List selectedItems = new ArrayList();
+        for (int i = iMin; i <= iMax; i++) {
+            if (sm.isSelectedIndex(i)) {
+                selectedItems.add(dm.getElementAt(i));
+            }
+        }
+        return selectedItems;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param  index  DOCUMENT ME!
+     */
+    public void ensureIndexIsVisible(final int index) {
+        final Rectangle cellBounds = getCellBounds(index);
+        if (cellBounds != null) {
+            scrollRectToVisible(cellBounds);
+        }
     }
 
     /**
