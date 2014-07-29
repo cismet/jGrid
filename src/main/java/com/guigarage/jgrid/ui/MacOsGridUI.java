@@ -29,6 +29,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
@@ -95,6 +96,13 @@ public class MacOsGridUI extends BasicGridUI {
         }
         g2.fillRoundRect(0, 0, bounds.width, bounds.height, selectionArcWidth,
             selectionArcHeight);
+        g2.setClip(new RoundRectangle2D.Double(
+                0,
+                0,
+                bounds.width,
+                bounds.height,
+                selectionArcWidth,
+                selectionArcHeight));
 
         // Content
         g2.setComposite(AlphaComposite.SrcIn);
