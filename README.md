@@ -1,4 +1,4 @@
-jGrid
+jGrid [![Build Status](http://ci.cismet.de/buildStatus/icon?job=JGrid)](https://ci.cismet.de/job/JGrid/)
 =====
 
 Grid Component for Java Swing 
