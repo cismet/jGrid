@@ -12,7 +12,7 @@
     
     <groupId>de.cismet</groupId>
     <artifactId>jgrid</artifactId>
-    <version>5.0</version>
+    <version>5.1-SNAPSHOT</version>
         
     <name>JGrid</name>
     <description>Grid based component for java swing</description>
@@ -49,7 +49,7 @@
         <connection>https://github.com/cismet/jGrid.git</connection>
         <developerConnection>scm:git:git@github.com:cismet/jGrid.git</developerConnection>
         <url>https://github.com/cismet/jGrid</url>
-        <tag>v5.0</tag>
+        <tag>HEAD</tag>
     </scm>
        
     <ciManagement>
